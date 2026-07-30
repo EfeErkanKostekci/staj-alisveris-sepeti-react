@@ -1,0 +1,117 @@
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  background-color: var(--color-button-passive);
+  border-bottom: 1px solid var(--color-border);
+}
+
+.left-side {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.user-avatar-initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-surface-checked);
+  color: var(--color-primary);
+  font-weight: 600;
+  font-size: 14px;
+  border: 1.5px solid var(--color-border-checked-purple);
+  user-select: none;
+}
+
+.user-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.user-name {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  line-height: 20px;
+}
+
+.user-email {
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  line-height: 18px;
+}
+
+.right-side {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.icon-button {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--color-button-border);
+  background-color: var(--color-button-passive);
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.icon-button:hover {
+  background-color: var(--color-button-active);
+  transform: translateY(-1px);
+}
+
+/* Ödül/Madalya Butonu Özel Stili */
+.award-btn {
+  background-color: var(--color-surface-checked);
+  border-color: var(--color-border-checked-purple);
+  color: var(--color-primary);
+}
+
+.award-btn:hover {
+  background-color: #f4ebff;
+}
+
+/* Bildirim Zili Butonu Özel Stili */
+.bell-btn {
+  color: var(--color-text-secondary);
+}
+
+/* Bildirim Zili Üzerindeki Badge */
+.bell-badge {
+  position: absolute;
+  top: 6px;
+  right: 6px;
+}
+
+.bell-badge-active {
+  background: #F04438;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 800;
+  min-width: 16px;
+  height: 16px;
+  border-radius: 999px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 3px;
+  border: 1.5px solid var(--color-button-passive);
+  animation: badgePop 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes badgePop {
+  from { transform: scale(0); }
+  to   { transform: scale(1); }
+}
