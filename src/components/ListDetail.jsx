@@ -329,7 +329,7 @@ export default function ListDetail({
 
             {list.canEdit && !isAddingInline && (
                 <div className="detail-footer-btn-container">
-                    <button className="primary-add-item-btn" onClick={() => setIsAddingInline(true)}>
+                    <button className="primary-add-item-btn" onClick={() => onEditItem({})}>
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
                             <line x1="12" y1="5" x2="12" y2="19" strokeLinecap="round" />
                             <line x1="5" y1="12" x2="19" y2="12" strokeLinecap="round" />
