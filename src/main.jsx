@@ -16,11 +16,18 @@ window.fetch = async (url, options) => {
   const token = localStorage.getItem('token');
   if (token) {
     options = options || {};
-    options.headers = {
+    const headers = {
       ...options.headers,
-      'Authorization': `Bearer ${token}`,
-      'Content-Type': 'application/json'
+      'Authorization': `Bearer ${token}`
     };
+
+    // Eğer gönderilen veri FormData ise (yani dosya yüklüyorsak) Content-Type eklemiyoruz
+    // Tarayıcı bunu multipart/form-data olarak kendisi otomatik ayarlayacak.
+    if (!(options.body instanceof FormData)) {
+      headers['Content-Type'] = headers['Content-Type'] || 'application/json';
+    }
+
+    options.headers = headers;
   }
   
   const res = await originalFetch(url, options);

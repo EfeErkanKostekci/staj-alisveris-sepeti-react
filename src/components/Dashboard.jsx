@@ -64,7 +64,13 @@ export default function Dashboard(
                                                         key={idx}
                                                         className="collab-avatar collab-avatar-initials"
                                                         title={user.name}
-                                                        style={{ zIndex: list.sharedWith.length - idx }}
+                                                        style={{ 
+                                                            zIndex: list.sharedWith.length - idx,
+                                                            backgroundImage: user.profilePictureUrl ? `url(${user.profilePictureUrl})` : 'none',
+                                                            backgroundSize: 'cover',
+                                                            backgroundPosition: 'center',
+                                                            color: user.profilePictureUrl ? 'transparent' : undefined
+                                                        }}
                                                     >
                                                         {initials}
                                                     </div>

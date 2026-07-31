@@ -38,6 +38,7 @@ import {
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [activeTab, setActiveTab] = useState('recents');
+  const [profilePictureUrl, setProfilePictureUrl] = useState(localStorage.getItem('profilePictureUrl') || '');
   const [lists, setLists] = useState([]);
   const [selectedListId, setSelectedListId] = useState(null);
 
@@ -93,6 +94,15 @@ export default function App() {
     localStorage.setItem('email', data.email);
     localStorage.setItem('name', data.name);
     localStorage.setItem('lastName', data.lastName);
+    
+    if (data.profilePictureUrl) {
+      localStorage.setItem('profilePictureUrl', data.profilePictureUrl);
+      setProfilePictureUrl(data.profilePictureUrl);
+    } else {
+      localStorage.removeItem('profilePictureUrl');
+      setProfilePictureUrl('');
+    }
+
     setToken(data.token);
     setUserName(`${data.name} ${data.lastName}`);
     setUserEmail(data.email);
@@ -105,6 +115,7 @@ export default function App() {
     localStorage.removeItem('email');
     localStorage.removeItem('name');
     localStorage.removeItem('lastName');
+    localStorage.removeItem('profilePictureUrl')
     setToken(null);
     setUserName('');
     setUserEmail('');
@@ -113,12 +124,46 @@ export default function App() {
     setInvites([]);
   };
 
+    const handleProfilePicUpload = async (file) => {
+    try {
+      // 1. Resim dosyasını API'ye (C#'a) gönderebilmek için FormData kalıbına sokuyoruz
+      const formData = new FormData();
+      formData.append('file', file);
+      
+      const t = localStorage.getItem('token');
+      
+      const res = await fetch('/api/users/upload-profile-picture', {
+        method: 'POST',
+        headers: { 'Authorization': `Bearer ${t}` }, // Dikkat: FormData yollarken Content-Type yazılmaz!
+        body: formData
+      });
+
+      if (!res.ok) throw new Error("Yükleme başarısız oldu!");
+
+      // 3. Backend'den dönen cevabı (Senin Result.Success ile yolladığın paket) alıyoruz
+      const resultData = await res.json();
+      const newUrl = resultData.data; // Senin backend'den yolladığın 'url' değişkeni tam olarak burada!
+
+      // 4. Ekrandaki resmi güncelliyoruz ve sayfayı yenileyince kaybolmasın diye LocalStorage'a yazıyoruz
+      setProfilePictureUrl(newUrl);
+      localStorage.setItem('profilePictureUrl', newUrl);
+      
+      alert("Fotoğraf yüklendi!");
+    } catch (e) {
+      console.error(e);
+      alert("Fotoğraf yüklenirken bir hata oluştu.");
+    }
+  };
+
   // 2. Yeni liste ve eleman işlemleri için mutation'ları tanımlıyoruz
-  const createListMutation = usePostApiShoppingLists();
-  const updateListMutation = usePutApiShoppingLists(); // Liste güncellemeleri için
-  const deleteListMutation = useDeleteApiShoppingListsId();
-  const toggleItemMutation = usePutApiShoppingListItems();
-  const deleteItemMutation = useDeleteApiShoppingListItemsId();
+  const t = localStorage.getItem('token');
+  const fetchOpts = { headers: { 'Authorization': `Bearer ${t}` } };
+
+  const createListMutation = usePostApiShoppingLists({ fetch: fetchOpts });
+  const updateListMutation = usePutApiShoppingLists({ fetch: fetchOpts }); // Liste güncellemeleri için
+  const deleteListMutation = useDeleteApiShoppingListsId({ fetch: fetchOpts });
+  const toggleItemMutation = usePutApiShoppingListItems({ fetch: fetchOpts });
+  const deleteItemMutation = useDeleteApiShoppingListItemsId({ fetch: fetchOpts });
 
 
 
@@ -173,7 +218,8 @@ export default function App() {
             { 
               name: userName || localStorage.getItem('name') || 'Kullanıcı', 
               email: userEmail || localStorage.getItem('email') || 'user@email.com', 
-              isOwner: isOwner 
+              isOwner: isOwner,
+              profilePictureUrl: localStorage.getItem('profilePictureUrl')
             }
           ],
           items: itemsList.map(item => {
@@ -203,7 +249,10 @@ export default function App() {
 
   // Ürün adını veritabanında arar, bulursa ID'sini döner, bulamazsa yeni ürün oluşturur (Casing-safe)
   const getOrCreateProduct = async (itemName) => {
-    const res = await getApiProducts();
+    const t = localStorage.getItem('token');
+    const authOpts = { headers: { 'Authorization': `Bearer ${t}` } };
+    
+    const res = await getApiProducts(authOpts);
     const productData = res.data?.data ? res.data.data : res.data;
     const products = productData || [];
     const existing = products.find(p => {
@@ -211,7 +260,7 @@ export default function App() {
       return name.toLowerCase() === itemName.toLowerCase();
     });
     if (existing) {
-      return existing.productId ?? existing.ProductId;
+      return existing.id ?? existing.Id;
     }
     
     // API formatına uygun dinamik ürün payload'u
@@ -220,9 +269,9 @@ export default function App() {
       description: ''
     });
     
-    const createRes = await postApiProducts(productPayload);
+    const createRes = await postApiProducts(productPayload, authOpts);
     const newProd = createRes.data?.data ? createRes.data.data : createRes.data;
-    return newProd?.productId ?? newProd?.ProductId;
+    return newProd?.id ?? newProd?.Id;
   };
 
   // Liste başlığı veya etiketini güncelleme mantığı (API)
@@ -290,7 +339,9 @@ export default function App() {
         isChecked: false
       });
       
-      await postApiShoppingListItems(itemPayload);
+      const t = localStorage.getItem('token');
+      const authOpts = { headers: { 'Authorization': `Bearer ${t}` } };
+      await postApiShoppingListItems(itemPayload, authOpts);
       queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
     } catch (e) {
       console.error('Error adding item:', e);
@@ -302,16 +353,33 @@ export default function App() {
   const handleSaveItem = async (updatedItem) => {
     try {
       const productId = await getOrCreateProduct(updatedItem.name);
-      
-      const itemPayload = buildPayload({
-        id: Number(updatedItem.id),
-        listId: Number(selectedListId),
-        productId: productId,
-        quantity: Number(updatedItem.quantity),
-        isChecked: updatedItem.checked
-      });
+      if (!productId) throw new Error("Ürün bulunamadı veya oluşturulamadı.");
 
-      await putApiShoppingListItems(itemPayload);
+      if (updatedItem.id) {
+        // Güncelleme (PUT)
+        const itemPayload = buildPayload({
+          id: Number(updatedItem.id),
+          listId: Number(selectedListId),
+          productId: productId,
+          quantity: Number(updatedItem.quantity) || 1,
+          isChecked: updatedItem.checked || false
+        });
+        const t = localStorage.getItem('token');
+        const authOpts = { headers: { 'Authorization': `Bearer ${t}` } };
+        await putApiShoppingListItems(itemPayload, authOpts);
+      } else {
+        // Yeni Ekleme (POST) - Modaldan gelen yeni ürün
+        const itemPayload = buildPayload({
+          listId: Number(selectedListId),
+          productId: productId,
+          quantity: Number(updatedItem.quantity) || 1,
+          isChecked: false
+        });
+        const t = localStorage.getItem('token');
+        const authOpts = { headers: { 'Authorization': `Bearer ${t}` } };
+        await postApiShoppingListItems(itemPayload, authOpts);
+      }
+
       queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
       setEditingItem(null);
     } catch (e) {
@@ -422,8 +490,10 @@ export default function App() {
     if (!activeList) return;
     const checkedItems = activeList.items.filter(item => item.checked);
     try {
+      const t = localStorage.getItem('token');
+      const authOpts = { headers: { 'Authorization': `Bearer ${t}` } };
       for (const item of checkedItems) {
-        await deleteApiShoppingListItemsId(Number(item.id));
+        await deleteApiShoppingListItemsId(Number(item.id), authOpts);
       }
       queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
     } catch (e) {
@@ -514,6 +584,8 @@ export default function App() {
         <Header
           userName={userName}
           userEmail={userEmail}
+          profilePictureUrl={profilePictureUrl}
+          onProfilePicUpload={handleProfilePicUpload}
           onLogout={handleLogout}
           onBellClick={() => setIsNotifOpen(v => !v)}
           inviteCount={invites.length}

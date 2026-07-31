@@ -5,9 +5,11 @@
  * Uygulamanın adını ("Shared List") ortada barındırır.
  * Sağ üst köşede bildirim çanını gösterir ve gelen davet (invite) sayısını kırmızı bir rozetle (badge) belirtir.
  */
+import { useRef, useState, useEffect } from 'react';
 import './Header.css';
 
-export default function Header({ userName, userEmail, onLogout, onBellClick, inviteCount = 0 }) {
+export default function Header({ userName, userEmail, onLogout, onBellClick, 
+                                inviteCount = 0, profilePictureUrl, onProfilePicUpload }) {
   // Kullanıcının ad ve soyadının baş harflerini alıp dairesel avatar içinde gösteriyoruz
   const getInitials = (name) => {
     if (!name) return 'U'; // Eğer bir şekilde isim yoksa Unknown "U" gösteriyoruz
@@ -16,32 +18,121 @@ export default function Header({ userName, userEmail, onLogout, onBellClick, inv
     return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
   };
 
+  const [showDropdown, setShowDropdown] = useState(false);
+  const dropdownTimeoutRef = useRef(null);
+
+  const handleUserInfoClick = () => {
+    setShowDropdown(true);
+    
+    // Varsa eski sayacı iptal et
+    if (dropdownTimeoutRef.current) {
+      clearTimeout(dropdownTimeoutRef.current);
+    }
+    
+    // 3 saniye sonra dropdown'ı otomatik kapat
+    dropdownTimeoutRef.current = setTimeout(() => {
+      setShowDropdown(false);
+    }, 3000);
+  };
+
+  // Bileşen silindiğinde hafızada sayaç kalmasın diye temizliyoruz
+  useEffect(() => {
+    return () => {
+      if (dropdownTimeoutRef.current) clearTimeout(dropdownTimeoutRef.current);
+    };
+  }, []);
+
+  const fileInputRef = useRef(null);
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+
+    if(!file) return;
+
+    if(file.size > 3 * 1024 * 1024){
+      alert("Dosya boyutu en fazla 3 MB olabilir!")
+      e.target.value = null;
+      return;
+    }
+
+    if(!file.type.startsWith("image/")){
+      alert("Lütfen sadece resim (jpeg, png) yükleyin!")
+      e.target.value = null;
+      return;
+    }
+
+    if(onProfilePicUpload){
+      onProfilePicUpload(file);
+    }
+  }
+
   return (
     // Sol tarafta sadece kullanıcı adı, e-postası ve fotosu olduğu için onları döndürür.
     <header className="header-container">
       <div className="left-side">
-        <div className="user-avatar-initials">
-          {getInitials(userName)}
+        {/* 1. Tıklanabilir Avatar Kutusu */}
+        <div 
+          className="user-avatar-initials" 
+          onClick={() => fileInputRef.current.click()}
+          style={{ 
+            cursor: 'pointer', 
+            backgroundImage: profilePictureUrl ? `url(${profilePictureUrl})` : 'none', 
+            backgroundSize: 'cover',
+            backgroundPosition: 'center'
+          }}
+          title="Profil Fotoğrafını Değiştir"
+        >
+          {/* Eğer resim URL'si yoksa baş harfleri göster */}
+          {!profilePictureUrl && getInitials(userName)}
         </div>
-        <div className="user-info">
+        {/* 2. Kullanıcının görmeyeceği ama dosya seçmesini sağlayan gizli alan */}
+        <input 
+          type="file" 
+          ref={fileInputRef} 
+          style={{ display: 'none' }} 
+          accept="image/jpeg, image/png" 
+          onChange={handleFileChange} 
+        />
+        <div className="user-info" onClick={handleUserInfoClick} style={{ cursor: 'pointer', position: 'relative' }}>
           <h4 className="user-name">{userName || 'Kullanıcı'}</h4>
           <p className="user-email">{userEmail || 'user@email.com'}</p>
+          
+          {/* Çıkış Yap Dropdown'u */}
+          {showDropdown && onLogout && (
+            <div 
+              className="user-dropdown" 
+              onClick={(e) => e.stopPropagation()} // Butona basınca dropdown'un kapanmasını engeller
+              onMouseEnter={() => clearTimeout(dropdownTimeoutRef.current)} // Üstüne gelince kapanmayı durdur
+              onMouseLeave={handleUserInfoClick} // Üzerinden fare çekilince tekrar 3 saniye saymaya başla
+              style={{
+                position: 'absolute',
+                top: '100%',
+                left: '0',
+                marginTop: '8px',
+                background: 'white',
+                border: '1px solid #e0e0e0',
+                borderRadius: '8px',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+                padding: '8px',
+                zIndex: 100,
+                display: 'flex',
+                alignItems: 'center',
+                gap: '8px',
+                cursor: 'pointer'
+              }}
+              onClickCapture={onLogout} // onClickCapture kullanarak onLogout tetiklenmesini garanti ediyoruz
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f04438" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                <polyline points="16 17 21 12 16 7" />
+                <line x1="21" y1="12" x2="9" y2="12" />
+              </svg>
+              <span style={{ color: '#f04438', fontSize: '14px', fontWeight: '500' }}>Çıkış Yap</span>
+            </div>
+          )}
         </div>
       </div>
 
-      {/* Sağ tarafta bulunan çıkış yapma, madalya ve bildirim butonlarını buldurduğu için onları döndürüyoruz. */}
       <div className="right-side"> 
-        {/* Çıkış Yap (Logout) Butonu */}
-        {onLogout && (
-          <button className="icon-button logout-btn" onClick={onLogout} aria-label="Logout" title="Çıkış Yap">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-              <polyline points="16 17 21 12 16 7" />
-              <line x1="21" y1="12" x2="9" y2="12" />
-            </svg>
-          </button>
-        )}
-
         {/* Ödül/Madalya Butonu */}
         <button className="icon-button award-btn" aria-label="Award badge">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">

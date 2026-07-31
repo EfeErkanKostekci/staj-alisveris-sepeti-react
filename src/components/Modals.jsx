@@ -136,15 +136,15 @@ export function ShareModal({ isOpen, list, onClose, onAddCollaborator, onChangeP
                 headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` }
             });
             if (res.ok) {
-                const data = await res.json();
-                const mapped = data.map(share => ({
+                const responseJson = await res.json();
+                const mapped = responseJson.data.map(share => ({
                     id: share.id,
                     name: share.inviteeName || 'Unknown',
                     email: share.inviteeEmail || '...',
                     role: share.role,
                     status: share.status,
                     isOwner: share.role === 'Owner',
-                    avatar: `https://api.dicebear.com/7.x/notionists/svg?seed=${share.inviteeEmail}`
+                    avatar: share.profilePictureUrl ? share.profilePictureUrl : `https://api.dicebear.com/7.x/notionists/svg?seed=${share.inviteeEmail}`
                 }));
                 setCollaborators(mapped);
             }
