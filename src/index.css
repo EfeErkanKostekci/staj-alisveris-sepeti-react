@@ -2,20 +2,20 @@
 
 :root {
   /* Renk Paleti */
-  --color-primary: #7F56D9;
-  --color-primary-hover: #6941C6;
-  --color-border-checked-purple: #D6BBFB;
-  --color-surface: #FCFCFD;
-  --color-surface-checked: #F9F5FF;
-  --color-border: #EAECF0;
+  --color-primary: #7f56d9;
+  --color-primary-hover: #6941c6;
+  --color-border-checked-purple: #d6bbfb;
+  --color-surface: #fcfcfd;
+  --color-surface-checked: #f9f5ff;
+  --color-border: #eaecf0;
   --color-text-primary: #344054;
   --color-text-secondary: #667085;
-  --color-text-muted: #98A2B3;
-  --color-notification-button: #F9FAFB;
-  --color-button-active: #F2F4F7;
-  --color-button-passive: #FFFFFF;
-  --color-button-border: #D0D5DD;
-  --color-bg-app: #F8F9FC;
+  --color-text-muted: #98a2b3;
+  --color-notification-button: #f9fafb;
+  --color-button-active: #f2f4f7;
+  --color-button-passive: #ffffff;
+  --color-button-border: #d0d5dd;
+  --color-bg-app: #f8f9fc;
   /* Genel arka plan */
 
   /* Köşe Yuvarlama (Border Radius) */

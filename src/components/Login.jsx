@@ -2,7 +2,7 @@
  * Login.jsx (Giriş ve Kayıt Ekranı)
  * ---------------------------------
  * Bu dosya, uygulamanın giriş ve kayıt olma formlarını (Auth) yönetir.
- * 
+ *
  * Ne işe yarar?
  * 1. Kullanıcının e-posta ve şifresiyle sisteme girmesini sağlar (Login).
  * 2. Yeni kullanıcıların kayıt olmasını sağlar (Register).
@@ -27,51 +27,68 @@ export default function Login({ onLoginSuccess }) {
     setErrorMsg('');
 
     if (isRegister) {
-      registerMutation.mutate({
-        data: { name, lastName, email, password }
-      }, {
-        onSuccess: (regRes) => {
-          // HTTP durum kodu 200 ile 299 arasındaysa kayıt başarılıdır
-          if (regRes.status >= 200 && regRes.status < 300) {
-            // Kayıt başarılıysa kullanıcıyı otomatik olarak giriş yaptırıyoruz
-            loginMutation.mutate({
-              data: { email, password }
-            }, {
-              onSuccess: (logRes) => {
-                if (logRes.status >= 200 && logRes.status < 300) {
-                  onLoginSuccess(logRes.data.data);
-                } else {
-                  setErrorMsg("Giriş yapılamadı: " + (logRes.data?.message || "E-posta veya şifre hatalı."));
+      registerMutation.mutate(
+        {
+          data: { name, lastName, email, password },
+        },
+        {
+          onSuccess: (regRes) => {
+            // HTTP durum kodu 200 ile 299 arasındaysa kayıt başarılıdır
+            if (regRes.status >= 200 && regRes.status < 300) {
+              // Kayıt başarılıysa kullanıcıyı otomatik olarak giriş yaptırıyoruz
+              loginMutation.mutate(
+                {
+                  data: { email, password },
+                },
+                {
+                  onSuccess: (logRes) => {
+                    if (logRes.status >= 200 && logRes.status < 300) {
+                      onLoginSuccess(logRes.data.data);
+                    } else {
+                      setErrorMsg(
+                        'Giriş yapılamadı: ' +
+                          (logRes.data?.message || 'E-posta veya şifre hatalı.')
+                      );
+                    }
+                  },
+                  onError: (err) => {
+                    setErrorMsg('Giriş yapılamadı: ' + err.message);
+                  },
                 }
-              },
-              onError: (err) => {
-                setErrorMsg("Giriş yapılamadı: " + err.message);
-              }
-            });
-          } else {
-            // Kayıt başarısızsa backend'den dönen hata mesajını gösteriyoruz
-            setErrorMsg("Kayıt olunamadı: " + (regRes.data?.message || "Geçersiz bilgiler veya e-posta kullanımda."));
-          }
-        },
-        onError: (err) => {
-          setErrorMsg("Kayıt olunamadı: " + err.message);
+              );
+            } else {
+              // Kayıt başarısızsa backend'den dönen hata mesajını gösteriyoruz
+              setErrorMsg(
+                'Kayıt olunamadı: ' +
+                  (regRes.data?.message || 'Geçersiz bilgiler veya e-posta kullanımda.')
+              );
+            }
+          },
+          onError: (err) => {
+            setErrorMsg('Kayıt olunamadı: ' + err.message);
+          },
         }
-      });
+      );
     } else {
-      loginMutation.mutate({
-        data: { email, password }
-      }, {
-        onSuccess: (logRes) => {
-          if (logRes.status >= 200 && logRes.status < 300) {
-            onLoginSuccess(logRes.data.data);
-          } else {
-            setErrorMsg("Giriş yapılamadı: " + (logRes.data?.message || "E-posta adresi veya şifre hatalı."));
-          }
+      loginMutation.mutate(
+        {
+          data: { email, password },
         },
-        onError: (err) => {
-          setErrorMsg("Giriş yapılamadı: " + err.message);
+        {
+          onSuccess: (logRes) => {
+            if (logRes.status >= 200 && logRes.status < 300) {
+              onLoginSuccess(logRes.data.data);
+            } else {
+              setErrorMsg(
+                'Giriş yapılamadı: ' + (logRes.data?.message || 'E-posta adresi veya şifre hatalı.')
+              );
+            }
+          },
+          onError: (err) => {
+            setErrorMsg('Giriş yapılamadı: ' + err.message);
+          },
         }
-      });
+      );
     }
   };
 
@@ -81,14 +98,27 @@ export default function Login({ onLoginSuccess }) {
       <div className="login-card">
         <div className="login-header">
           <div className="login-logo">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="40"
+              height="40"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+            >
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
           </div>
           <h2>{isRegister ? 'Hesap Oluştur' : 'Giriş Yap'}</h2>
-          <p>{isRegister ? 'Alışveriş sepetinizi yönetmeye başlayın' : 'Sepetlerinize erişmek için giriş yapın'}</p>
+          <p>
+            {isRegister
+              ? 'Alışveriş sepetinizi yönetmeye başlayın'
+              : 'Sepetlerinize erişmek için giriş yapın'}
+          </p>
         </div>
 
         <form onSubmit={handleSubmit} className="login-form">
@@ -141,18 +171,30 @@ export default function Login({ onLoginSuccess }) {
 
           {errorMsg && <div className="login-error">{errorMsg}</div>}
 
-          <button type="submit" className="login-btn" disabled={loginMutation.isPending || registerMutation.isPending}>
+          <button
+            type="submit"
+            className="login-btn"
+            disabled={loginMutation.isPending || registerMutation.isPending}
+          >
             {loginMutation.isPending || registerMutation.isPending ? (
               <span className="spinner"></span>
+            ) : isRegister ? (
+              'Kayıt Ol ve Giriş Yap'
             ) : (
-              isRegister ? 'Kayıt Ol ve Giriş Yap' : 'Giriş Yap'
+              'Giriş Yap'
             )}
           </button>
         </form>
 
         <div className="login-footer">
           <span>{isRegister ? 'Zaten hesabınız var mı?' : 'Hesabınız yok mu?'}</span>
-          <button onClick={() => { setIsRegister(!isRegister); setErrorMsg(''); }} className="toggle-auth-btn">
+          <button
+            onClick={() => {
+              setIsRegister(!isRegister);
+              setErrorMsg('');
+            }}
+            className="toggle-auth-btn"
+          >
             {isRegister ? 'Giriş Yap' : 'Kayıt Ol'}
           </button>
         </div>

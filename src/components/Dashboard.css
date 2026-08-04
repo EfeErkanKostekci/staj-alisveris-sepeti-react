@@ -1,228 +1,227 @@
 .dashboard-container {
-    position: relative;
-    min-height: calc(100vh - 150px);
-    padding: 16px 20px;
+  position: relative;
+  min-height: calc(100vh - 150px);
+  padding: 16px 20px;
 }
 
 /* Boş durumdaki ekranın stilleri */
 .empty-state {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding-top: 60px;
 }
 
 /* Boş durumda gözükecek olan fotoğrafın stili */
 .empty-illustration {
-    margin-bottom: 24px;
-    animation: float 4s ease-in-out infinite;
+  margin-bottom: 24px;
+  animation: float 4s ease-in-out infinite;
 }
 
 @keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
 
-    0%,
-    100% {
-        transform: translateY(0);
-    }
-
-    50% {
-        transform: translateY(-8px);
-    }
+  50% {
+    transform: translateY(-8px);
+  }
 }
 /* Boş durumda gözükecek olan başlığın stili */
 .empty-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin-bottom: 8px;
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 8px;
 }
 /* Boş durumda gözükecek olan yazının stili */
 .empty-description {
-    font-size: 14px;
-    color: var(--color-text-secondary);
-    max-width: 260px;
-    line-height: 20px;
+  font-size: 14px;
+  color: var(--color-text-secondary);
+  max-width: 260px;
+  line-height: 20px;
 }
 
 /* Boş durumda liste oluşturma butonunu gösterecek okun stili */
 .arrow-pointer {
-    position: absolute;
-    bottom: 80px;
-    right: 60px;
-    opacity: 0.7;
+  position: absolute;
+  bottom: 80px;
+  right: 60px;
+  opacity: 0.7;
 }
 
 /* Liste kartlarının stilleri */
 .lists-stack {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    margin-bottom: 80px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 80px;
 }
 
 /* Listedeki kartların stili */
 .list-card {
-    background-color: var(--color-button-passive);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-lg);
-    padding: 24px;
-    cursor: pointer;
-    box-shadow: var(--shadow-sm);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    display: flex;
-    flex-direction: column;
-    gap: 20px;
+  background-color: var(--color-button-passive);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  padding: 24px;
+  cursor: pointer;
+  box-shadow: var(--shadow-sm);
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 /* Kartın üstüne gelince gözükecek stil */
 .list-card:hover {
-    transform: translateY(-2px);
-    border-color: var(--color-border-checked-purple);
-    box-shadow: var(--shadow-md);
+  transform: translateY(-2px);
+  border-color: var(--color-border-checked-purple);
+  box-shadow: var(--shadow-md);
 }
 
 /* Kartın üst kısmının stili */
 .card-top {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
 }
 
 /* Liste başlığının ve kullanıcı fotosunun stili */
 .card-info {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
-/* Liste başlığını stili */ 
+/* Liste başlığını stili */
 .card-title {
-    font-size: 20px;
-    font-weight: 700;
-    color: #2c3a50;
-    /* Figma'daki koyu lacivert/gri tonu */
-    letter-spacing: -0.3px;
+  font-size: 20px;
+  font-weight: 700;
+  color: #2c3a50;
+  /* Figma'daki koyu lacivert/gri tonu */
+  letter-spacing: -0.3px;
 }
 
 /* Ortak çalışanların avatarlarının stili */
 .collaborators {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
-/* Ortak kullanıcının avatarının stili */ 
+/* Ortak kullanıcının avatarının stili */
 .collab-avatar {
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-full);
-    border: 2px solid var(--color-button-passive);
-    margin-right: -8px;
-    object-fit: cover;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  border: 2px solid var(--color-button-passive);
+  margin-right: -8px;
+  object-fit: cover;
 }
 
 /* Ortak kullanıcı bilgilerinin stili */
 .collab-avatar-initials {
-    background: linear-gradient(135deg, #7F56D9, #9E77ED);
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    letter-spacing: 0.5px;
-    flex-shrink: 0;
+  background: linear-gradient(135deg, #7f56d9, #9e77ed);
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
 }
 
-/* Ortak kullanıcıların stili */ 
+/* Ortak kullanıcıların stili */
 .collab-more {
-    font-size: 12px;
-    font-weight: 600;
-    color: var(--color-primary);
-    background-color: var(--color-surface-checked);
-    border: 1px solid var(--color-border-checked-purple);
-    width: 32px;
-    height: 32px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: var(--radius-full);
-    margin-left: 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-primary);
+  background-color: var(--color-surface-checked);
+  border: 1px solid var(--color-border-checked-purple);
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  margin-left: 12px;
 }
 
 /* Kartın üstündeki favorileme butonunun stili */
 .favorite-btn {
-    background-color: var(--color-surface-checked);
-    border: none;
-    color: var(--color-primary);
-    width: 38px;
-    height: 38px;
-    border-radius: var(--radius-full);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.2s ease;
+  background-color: var(--color-surface-checked);
+  border: none;
+  color: var(--color-primary);
+  width: 38px;
+  height: 38px;
+  border-radius: var(--radius-full);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
 }
 
 /* Aynı butonun üstüne gelindiğindeki stili */
 .favorite-btn:hover {
-    background-color: #f4ebff;
-    transform: scale(1.05);
+  background-color: #f4ebff;
+  transform: scale(1.05);
 }
 
 /* Detay Bilgileri Satırı */
 .card-details-row {
-    display: flex;
-    align-items: center;
-    gap: 36px;
-    /* İkonlar arası geniş boşluk */
-    color: var(--color-text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 36px;
+  /* İkonlar arası geniş boşluk */
+  color: var(--color-text-secondary);
 }
 
 /* Listedeki "Completed" kısmının stili */
 .detail-item {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 14px;
-    font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
 }
 
-/* atynı kısmın ikonunun stili */ 
+/* atynı kısmın ikonunun stili */
 .detail-icon {
-    color: var(--color-text-secondary);
+  color: var(--color-text-secondary);
 }
 
 /* Ekleme butonunun stili */
 .floating-add-btn {
-    position: fixed;
-    bottom: 24px;
-    right: 24px;
-    width: 56px;
-    height: 56px;
-    border-radius: var(--radius-full);
-    background-color: var(--color-primary);
-    color: var(--color-button-passive);
-    border: none;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    box-shadow: 0px 4px 12px rgba(127, 86, 217, 0.4);
-    transition: all 0.2s ease;
-    z-index: 100;
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  width: 56px;
+  height: 56px;
+  border-radius: var(--radius-full);
+  background-color: var(--color-primary);
+  color: var(--color-button-passive);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0px 4px 12px rgba(127, 86, 217, 0.4);
+  transition: all 0.2s ease;
+  z-index: 100;
 }
 
 /* Aynı butonun üstüne gelince gözüken stili  */
 .floating-add-btn:hover {
-    background-color: var(--color-primary-hover);
-    transform: scale(1.05) translateY(-2px);
-    box-shadow: 0px 6px 16px rgba(127, 86, 217, 0.5);
+  background-color: var(--color-primary-hover);
+  transform: scale(1.05) translateY(-2px);
+  box-shadow: 0px 6px 16px rgba(127, 86, 217, 0.5);
 }
 
 /* Butona tıklanınca gözüken stili */
 .floating-add-btn:active {
-    transform: scale(0.95);
+  transform: scale(0.95);
 }

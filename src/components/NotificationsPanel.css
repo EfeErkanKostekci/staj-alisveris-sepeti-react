@@ -1,192 +1,194 @@
 /* Bildirim Panel Arkaplanı */
 .notif-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 500;
-    background: transparent;
+  position: fixed;
+  inset: 0;
+  z-index: 500;
+  background: transparent;
 }
 
 /* Panel Kutusu */
 .notif-panel {
-    position: fixed;
-    top: 72px;
-    right: 16px;
-    width: 340px;
-    max-height: 480px;
-    background: var(--color-surface, #1a1a2e);
-    border: 1px solid var(--color-border, rgba(255,255,255,0.1));
-    border-radius: 16px;
-    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(127, 86, 217, 0.2);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    animation: notifSlideIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+  position: fixed;
+  top: 72px;
+  right: 16px;
+  width: 340px;
+  max-height: 480px;
+  background: var(--color-surface, #1a1a2e);
+  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
+  border-radius: 16px;
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(127, 86, 217, 0.2);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: notifSlideIn 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 @keyframes notifSlideIn {
-    from {
-        opacity: 0;
-        transform: translateY(-12px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(-12px) scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 /* Panel Başlık */
 .notif-header {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--color-border, rgba(255,255,255,0.1));
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
 }
 
 .notif-header h3 {
-    font-size: 15px;
-    font-weight: 700;
-    color: var(--color-text-primary, #fff);
-    margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--color-text-primary, #fff);
+  margin: 0;
 }
 
 .notif-count-badge {
-    background: #7F56D9;
-    color: #fff;
-    font-size: 11px;
-    font-weight: 700;
-    padding: 2px 7px;
-    border-radius: 999px;
-    min-width: 20px;
-    text-align: center;
+  background: #7f56d9;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 999px;
+  min-width: 20px;
+  text-align: center;
 }
 
 /* Boş Durum */
 .notif-empty {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 12px;
-    padding: 48px 20px;
-    color: var(--color-text-secondary, rgba(255,255,255,0.4));
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 48px 20px;
+  color: var(--color-text-secondary, rgba(255, 255, 255, 0.4));
 }
 
 .notif-empty svg {
-    opacity: 0.4;
+  opacity: 0.4;
 }
 
 .notif-empty p {
-    font-size: 13px;
-    margin: 0;
+  font-size: 13px;
+  margin: 0;
 }
 
 /* Davet Listesi */
 .notif-list {
-    overflow-y: auto;
-    max-height: 400px;
-    padding: 8px;
+  overflow-y: auto;
+  max-height: 400px;
+  padding: 8px;
 }
 
 .notif-list::-webkit-scrollbar {
-    width: 4px;
+  width: 4px;
 }
 .notif-list::-webkit-scrollbar-track {
-    background: transparent;
+  background: transparent;
 }
 .notif-list::-webkit-scrollbar-thumb {
-    background: rgba(127, 86, 217, 0.4);
-    border-radius: 4px;
+  background: rgba(127, 86, 217, 0.4);
+  border-radius: 4px;
 }
 
 /* Davet Kartı */
 .notif-card {
-    display: flex;
-    gap: 12px;
-    padding: 14px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.04);
-    margin-bottom: 6px;
-    transition: background 0.15s ease;
+  display: flex;
+  gap: 12px;
+  padding: 14px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  margin-bottom: 6px;
+  transition: background 0.15s ease;
 }
 
 .notif-card:last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .notif-card:hover {
-    background: rgba(127, 86, 217, 0.08);
+  background: rgba(127, 86, 217, 0.08);
 }
 
 /* İkon Alanı */
 .notif-icon {
-    width: 36px;
-    height: 36px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, rgba(127, 86, 217, 0.2), rgba(158, 119, 237, 0.2));
-    border: 1px solid rgba(127, 86, 217, 0.3);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-    color: #9E77ED;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, rgba(127, 86, 217, 0.2), rgba(158, 119, 237, 0.2));
+  border: 1px solid rgba(127, 86, 217, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  color: #9e77ed;
 }
 
 /* Metin */
 .notif-content {
-    flex: 1;
-    min-width: 0;
+  flex: 1;
+  min-width: 0;
 }
 
 .notif-message {
-    font-size: 13px;
-    color: var(--color-text-primary, #fff);
-    margin: 0 0 4px;
-    line-height: 1.4;
+  font-size: 13px;
+  color: var(--color-text-primary, #fff);
+  margin: 0 0 4px;
+  line-height: 1.4;
 }
 
 .notif-meta {
-    font-size: 11px;
-    color: var(--color-text-secondary, rgba(255,255,255,0.5));
-    margin: 0 0 10px;
+  font-size: 11px;
+  color: var(--color-text-secondary, rgba(255, 255, 255, 0.5));
+  margin: 0 0 10px;
 }
 
 /* Aksiyon Butonları */
 .notif-actions {
-    display: flex;
-    gap: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .notif-accept-btn,
 .notif-decline-btn {
-    flex: 1;
-    padding: 6px 12px;
-    border-radius: 8px;
-    font-size: 12px;
-    font-weight: 600;
-    cursor: pointer;
-    border: none;
-    transition: all 0.15s ease;
+  flex: 1;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s ease;
 }
 
 .notif-accept-btn {
-    background: linear-gradient(135deg, #7F56D9, #9E77ED);
-    color: #fff;
+  background: linear-gradient(135deg, #7f56d9, #9e77ed);
+  color: #fff;
 }
 
 .notif-accept-btn:hover {
-    opacity: 0.9;
-    transform: translateY(-1px);
+  opacity: 0.9;
+  transform: translateY(-1px);
 }
 
 .notif-decline-btn {
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--color-text-secondary, rgba(255,255,255,0.6));
-    border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.08);
+  color: var(--color-text-secondary, rgba(255, 255, 255, 0.6));
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .notif-decline-btn:hover {
-    background: rgba(253, 162, 155, 0.15);
-    color: #fda29b;
-    border-color: rgba(253, 162, 155, 0.3);
+  background: rgba(253, 162, 155, 0.15);
+  color: #fda29b;
+  border-color: rgba(253, 162, 155, 0.3);
 }
