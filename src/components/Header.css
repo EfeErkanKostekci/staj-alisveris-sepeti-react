@@ -96,7 +96,7 @@
 }
 
 .bell-badge-active {
-  background: #F04438;
+  background: #f04438;
   color: #fff;
   font-size: 9px;
   font-weight: 800;
@@ -112,6 +112,10 @@
 }
 
 @keyframes badgePop {
-  from { transform: scale(0); }
-  to   { transform: scale(1); }
+  from {
+    transform: scale(0);
+  }
+  to {
+    transform: scale(1);
+  }
 }

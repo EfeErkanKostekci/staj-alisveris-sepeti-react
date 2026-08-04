@@ -1,342 +1,342 @@
 /* MODAL BACKDROP (Arka Plan Bulanıklığı/Karartma) */
 .modal-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(16, 24, 40, 0.4);
-    backdrop-filter: blur(4px);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 200;
-    padding: 20px;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(16, 24, 40, 0.4);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  padding: 20px;
 }
 
 /* MODAL KART YAPISI */
 .modal-card {
-    background-color: var(--color-button-passive);
-    border-radius: var(--radius-lg);
-    box-shadow: var(--shadow-lg);
-    width: 100%;
-    max-width: 400px;
-    overflow: hidden;
-    animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  background-color: var(--color-button-passive);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-lg);
+  width: 100%;
+  max-width: 400px;
+  overflow: hidden;
+  animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 @keyframes slideUp {
-    from {
-        transform: translateY(20px);
-        opacity: 0;
-    }
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
 
-    to {
-        transform: translateY(0);
-        opacity: 1;
-    }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 24px;
-    border-bottom: 1px solid var(--color-border);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--color-border);
 }
 
 .modal-header h3 {
-    font-size: 18px;
-    font-weight: 600;
-    color: var(--color-text-primary);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--color-text-primary);
 }
 
 .close-modal-btn {
-    background: transparent;
-    border: none;
-    color: var(--color-text-secondary);
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 32px;
-    height: 32px;
-    border-radius: var(--radius-full);
-    transition: background-color 0.2s;
+  background: transparent;
+  border: none;
+  color: var(--color-text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  border-radius: var(--radius-full);
+  transition: background-color 0.2s;
 }
 
 .close-modal-btn:hover {
-    background-color: var(--color-button-active);
+  background-color: var(--color-button-active);
 }
 
 /* FORM STİLLERİ */
 .modal-form {
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .form-group {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
 .form-group label {
-    font-size: 14px;
-    font-weight: 500;
-    color: var(--color-text-primary);
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-text-primary);
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-    border: 1px solid var(--color-button-border);
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
-    font-size: 15px;
-    color: var(--color-text-primary);
-    outline: none;
-    font-family: inherit;
-    transition: border-color 0.2s;
-    background-color: var(--color-button-passive);
-    resize: none;
+  border: 1px solid var(--color-button-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 15px;
+  color: var(--color-text-primary);
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.2s;
+  background-color: var(--color-button-passive);
+  resize: none;
 }
 
 .form-group input:focus,
 .form-group select:focus,
 .form-group textarea:focus {
-    border-color: var(--color-primary);
-    box-shadow: 0 0 0 3px rgba(127, 86, 217, 0.1);
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 3px rgba(127, 86, 217, 0.1);
 }
 
 .form-row-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
 }
 
 .form-actions {
-    display: flex;
-    gap: 12px;
-    margin-top: 10px;
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
 }
 
 .save-item-btn {
-    flex: 1;
-    background-color: var(--color-primary);
-    color: var(--color-button-passive);
-    border: none;
-    padding: 12px;
-    font-size: 15px;
-    font-weight: 600;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: background-color 0.2s;
+  flex: 1;
+  background-color: var(--color-primary);
+  color: var(--color-button-passive);
+  border: none;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .save-item-btn:hover {
-    background-color: var(--color-primary-hover);
+  background-color: var(--color-primary-hover);
 }
 
 .delete-item-action-btn {
-    background-color: #fef3f2;
-    border: 1px solid #fda29b;
-    color: #b42318;
-    padding: 12px;
-    font-size: 15px;
-    font-weight: 600;
-    border-radius: var(--radius-sm);
-    cursor: pointer;
-    transition: all 0.2s;
+  background-color: #fef3f2;
+  border: 1px solid #fda29b;
+  color: #b42318;
+  padding: 12px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s;
 }
 
 .delete-item-action-btn:hover {
-    background-color: #fee4e2;
+  background-color: #fee4e2;
 }
 
 /* ==========================================
    SHARE MODALI STİLLERİ
    ========================================== */
 .share-invite-form {
-    padding: 20px 24px 0;
+  padding: 20px 24px 0;
 }
 
 .share-input-row {
-    display: flex;
-    gap: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 .share-input-row input {
-    flex: 1;
-    border: 1px solid var(--color-button-border);
-    border-radius: var(--radius-sm);
-    padding: 10px 14px;
-    font-size: 15px;
-    outline: none;
+  flex: 1;
+  border: 1px solid var(--color-button-border);
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 15px;
+  outline: none;
 }
 
 .share-input-row input:focus {
-    border-color: var(--color-primary);
+  border-color: var(--color-primary);
 }
 
 .role-select {
-    border: 1px solid var(--color-button-border);
-    border-radius: var(--radius-sm);
-    padding: 0 10px;
-    font-size: 14px;
-    background-color: var(--color-button-passive);
-    outline: none;
+  border: 1px solid var(--color-button-border);
+  border-radius: var(--radius-sm);
+  padding: 0 10px;
+  font-size: 14px;
+  background-color: var(--color-button-passive);
+  outline: none;
 }
 
 .invite-action-btn {
-    background-color: var(--color-primary);
-    color: var(--color-button-passive);
-    border: none;
-    padding: 0 16px;
-    border-radius: var(--radius-sm);
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
+  background-color: var(--color-primary);
+  color: var(--color-button-passive);
+  border: none;
+  padding: 0 16px;
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
 }
 
 .invite-action-btn:hover {
-    background-color: var(--color-primary-hover);
+  background-color: var(--color-primary-hover);
 }
 
 /* Davetliler Listesi */
 .invites-section {
-    padding: 24px;
+  padding: 24px;
 }
 
 .invites-title {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--color-text-primary);
-    margin-bottom: 12px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
+  margin-bottom: 12px;
 }
 
 .invites-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
-    max-height: 240px;
-    overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  max-height: 240px;
+  overflow-y: auto;
 }
 
 .invite-user-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
 .user-left {
-    display: flex;
-    align-items: center;
-    gap: 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .invite-avatar {
-    width: 36px;
-    height: 36px;
-    border-radius: var(--radius-full);
-    object-fit: cover;
+  width: 36px;
+  height: 36px;
+  border-radius: var(--radius-full);
+  object-fit: cover;
 }
 
 .invite-user-details {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 .invite-user-name {
-    font-size: 14px;
-    font-weight: 600;
-    color: var(--color-text-primary);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-primary);
 }
 
 .invite-user-email {
-    font-size: 12px;
-    color: var(--color-text-secondary);
+  font-size: 12px;
+  color: var(--color-text-secondary);
 }
 
 .owner-badge {
-    font-size: 13px;
-    color: var(--color-text-secondary);
-    font-weight: 500;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  font-weight: 500;
 }
 
 .role-inline-select {
-    border: none;
-    font-size: 13px;
-    color: var(--color-primary);
-    font-weight: 600;
-    background: transparent;
-    outline: none;
-    cursor: pointer;
+  border: none;
+  font-size: 13px;
+  color: var(--color-primary);
+  font-weight: 600;
+  background: transparent;
+  outline: none;
+  cursor: pointer;
 }
 
 /* ==========================================
    LIST OPTIONS DROPDOWN (item Po...)
    ========================================== */
 .dropdown-backdrop {
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    z-index: 150;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 150;
 }
 
 .options-dropdown-card {
-    position: fixed;
-    top: 60px;
-    /* Header'ın hemen altında */
-    right: 20px;
-    background-color: var(--color-button-passive);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius-md);
-    box-shadow: var(--shadow-lg);
-    padding: 8px 0;
-    width: 180px;
-    display: flex;
-    flex-direction: column;
-    z-index: 160;
-    animation: fadeIn 0.15s ease-out;
+  position: fixed;
+  top: 60px;
+  /* Header'ın hemen altında */
+  right: 20px;
+  background-color: var(--color-button-passive);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-md);
+  box-shadow: var(--shadow-lg);
+  padding: 8px 0;
+  width: 180px;
+  display: flex;
+  flex-direction: column;
+  z-index: 160;
+  animation: fadeIn 0.15s ease-out;
 }
 
 @keyframes fadeIn {
-    from {
-        opacity: 0;
-        transform: translateY(-5px);
-    }
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
 
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .dropdown-option-btn {
-    background: transparent;
-    border: none;
-    padding: 12px 20px;
-    font-size: 14px;
-    text-align: left;
-    color: var(--color-text-primary);
-    cursor: pointer;
-    transition: background-color 0.2s;
-    font-weight: 500;
+  background: transparent;
+  border: none;
+  padding: 12px 20px;
+  font-size: 14px;
+  text-align: left;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-weight: 500;
 }
 
 .dropdown-option-btn:hover {
-    background-color: var(--color-button-active);
+  background-color: var(--color-button-active);
 }
 
 .dropdown-option-btn.delete-option {
-    color: #b42318;
+  color: #b42318;
 }
 
 .dropdown-option-btn.delete-option:hover {
-    background-color: #fef3f2;
+  background-color: #fef3f2;
 }

@@ -2,7 +2,7 @@
  * App.jsx (Ana Uygulama Bileşeni)
  * --------------------------------
  * Bu dosya, uygulamanın ana yönetim merkezidir (State Management).
- * 
+ *
  * Ne işe yarar?
  * 1. Kullanıcı girişi (Login) durumunu takip eder.
  * 2. API'den tüm alışveriş listelerini çeker ve React Query ile yönetir.
@@ -20,8 +20,8 @@ import { EditItemModal, ShareModal, ListOptionsMenu } from './components/Modals.
 import NotificationsPanel from './components/NotificationsPanel.jsx';
 import Login from './components/Login.jsx';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
-import { 
-  useGetApiShoppingLists, 
+import {
+  useGetApiShoppingLists,
   getGetApiShoppingListsQueryKey,
   usePostApiShoppingLists,
   usePutApiShoppingLists,
@@ -32,13 +32,15 @@ import {
   postApiProducts,
   postApiShoppingListItems,
   putApiShoppingListItems,
-  deleteApiShoppingListItemsId
+  deleteApiShoppingListItemsId,
 } from './api/endpoints';
 
 export default function App() {
   const [token, setToken] = useState(localStorage.getItem('token'));
   const [activeTab, setActiveTab] = useState('recents');
-  const [profilePictureUrl, setProfilePictureUrl] = useState(localStorage.getItem('profilePictureUrl') || '');
+  const [profilePictureUrl, setProfilePictureUrl] = useState(
+    localStorage.getItem('profilePictureUrl') || ''
+  );
   const [lists, setLists] = useState([]);
   const [selectedListId, setSelectedListId] = useState(null);
 
@@ -58,18 +60,21 @@ export default function App() {
   const [invites, setInvites] = useState([]); // Bekleyen davetler
 
   // Aktif sekmeye göre listeleri filtreleme
-  const filteredLists = lists.filter(list => list.status === activeTab);
+  const filteredLists = lists.filter((list) => list.status === activeTab);
 
   // Seçili olan listenin nesnesi
-  const activeList = lists.find(list => list.id === selectedListId);
+  const activeList = lists.find((list) => list.id === selectedListId);
 
   const queryClient = useQueryClient();
 
   // 1. Backend'den tüm listeleri (içindeki ürünler ve ürün isimleriyle beraber) çekiyoruz
   // enabled parametresiyle sadece giriş yapılmışsa veri çekilmesini sağlıyoruz
-  const { data: response, isLoading, isError, error } = useGetApiShoppingLists(
-    { query: { enabled: !!token } }
-  );
+  const {
+    data: response,
+    isLoading,
+    isError,
+    error,
+  } = useGetApiShoppingLists({ query: { enabled: !!token } });
 
   // 2. Bekleyen davetleri her 10 saniyede bir çek
   useQuery({
@@ -77,7 +82,7 @@ export default function App() {
     queryFn: async () => {
       const t = localStorage.getItem('token');
       const res = await fetch('/api/ListShares/my-invites', {
-        headers: { 'Authorization': `Bearer ${t}` }
+        headers: { Authorization: `Bearer ${t}` },
       });
       if (!res.ok) throw new Error('Davetler alınamadı');
       const data = await res.json();
@@ -94,7 +99,7 @@ export default function App() {
     localStorage.setItem('email', data.email);
     localStorage.setItem('name', data.name);
     localStorage.setItem('lastName', data.lastName);
-    
+
     if (data.profilePictureUrl) {
       localStorage.setItem('profilePictureUrl', data.profilePictureUrl);
       setProfilePictureUrl(data.profilePictureUrl);
@@ -115,7 +120,7 @@ export default function App() {
     localStorage.removeItem('email');
     localStorage.removeItem('name');
     localStorage.removeItem('lastName');
-    localStorage.removeItem('profilePictureUrl')
+    localStorage.removeItem('profilePictureUrl');
     setToken(null);
     setUserName('');
     setUserEmail('');
@@ -124,21 +129,21 @@ export default function App() {
     setInvites([]);
   };
 
-    const handleProfilePicUpload = async (file) => {
+  const handleProfilePicUpload = async (file) => {
     try {
       // 1. Resim dosyasını API'ye (C#'a) gönderebilmek için FormData kalıbına sokuyoruz
       const formData = new FormData();
       formData.append('file', file);
-      
+
       const t = localStorage.getItem('token');
-      
+
       const res = await fetch('/api/users/upload-profile-picture', {
         method: 'POST',
-        headers: { 'Authorization': `Bearer ${t}` }, // Dikkat: FormData yollarken Content-Type yazılmaz!
-        body: formData
+        headers: { Authorization: `Bearer ${t}` }, // Dikkat: FormData yollarken Content-Type yazılmaz!
+        body: formData,
       });
 
-      if (!res.ok) throw new Error("Yükleme başarısız oldu!");
+      if (!res.ok) throw new Error('Yükleme başarısız oldu!');
 
       // 3. Backend'den dönen cevabı (Senin Result.Success ile yolladığın paket) alıyoruz
       const resultData = await res.json();
@@ -147,17 +152,17 @@ export default function App() {
       // 4. Ekrandaki resmi güncelliyoruz ve sayfayı yenileyince kaybolmasın diye LocalStorage'a yazıyoruz
       setProfilePictureUrl(newUrl);
       localStorage.setItem('profilePictureUrl', newUrl);
-      
-      alert("Fotoğraf yüklendi!");
+
+      alert('Fotoğraf yüklendi!');
     } catch (e) {
       console.error(e);
-      alert("Fotoğraf yüklenirken bir hata oluştu.");
+      alert('Fotoğraf yüklenirken bir hata oluştu.');
     }
   };
 
   // 2. Yeni liste ve eleman işlemleri için mutation'ları tanımlıyoruz
   const t = localStorage.getItem('token');
-  const fetchOpts = { headers: { 'Authorization': `Bearer ${t}` } };
+  const fetchOpts = { headers: { Authorization: `Bearer ${t}` } };
 
   const createListMutation = usePostApiShoppingLists({ fetch: fetchOpts });
   const updateListMutation = usePutApiShoppingLists({ fetch: fetchOpts }); // Liste güncellemeleri için
@@ -165,11 +170,9 @@ export default function App() {
   const toggleItemMutation = usePutApiShoppingListItems({ fetch: fetchOpts });
   const deleteItemMutation = useDeleteApiShoppingListItemsId({ fetch: fetchOpts });
 
-
-
   // API'den dönen verinin harf formatını (casing) dinamik tespit eden yardımcı
   const listDataForCasing = response?.data?.data ? response.data.data : response?.data;
-  const isCamelCase = listDataForCasing?.[0] ? ('id' in listDataForCasing[0]) : true;
+  const isCamelCase = listDataForCasing?.[0] ? 'id' in listDataForCasing[0] : true;
 
   // Giden istekleri (payload) API formatına (camelCase / PascalCase) göre düzenleyen yardımcı
   const buildPayload = (fields) => {
@@ -193,7 +196,7 @@ export default function App() {
     // Result pattern'dan dönen gerçek listeyi alıyoruz
     const listData = response?.data?.data ? response.data.data : response?.data;
     if (listData && Array.isArray(listData)) {
-      const mapped = listData.map(list => {
+      const mapped = listData.map((list) => {
         const id = list.id ?? list.Id;
         const title = list.title ?? list.Title ?? '';
         const tag = list.tag ?? list.Tag ?? '';
@@ -203,26 +206,26 @@ export default function App() {
         const isShared = list.isShared ?? list.IsShared ?? false;
         const isDraft = list.isDraft ?? list.isDraft ?? false;
         const itemsList = list.shoppingListItems ?? list.ShoppingListItems ?? [];
-        const currentUserRole = list.currentUserRole ?? list.CurrentUserRole ?? "Owner";
-        const canEdit = currentUserRole === "Edit" || currentUserRole === "Owner";
+        const currentUserRole = list.currentUserRole ?? list.CurrentUserRole ?? 'Owner';
+        const canEdit = currentUserRole === 'Edit' || currentUserRole === 'Owner';
 
         return {
           id: String(id),
           title: title,
           tag: tag,
-          status: isDraft ? 'draft' : (!isOwner || isShared) ? 'shared' : 'recents',
+          status: isDraft ? 'draft' : !isOwner || isShared ? 'shared' : 'recents',
           canEdit: canEdit,
           currentUserRole: currentUserRole,
           isDraft: isDraft,
           sharedWith: [
-            { 
-              name: userName || localStorage.getItem('name') || 'Kullanıcı', 
-              email: userEmail || localStorage.getItem('email') || 'user@email.com', 
+            {
+              name: userName || localStorage.getItem('name') || 'Kullanıcı',
+              email: userEmail || localStorage.getItem('email') || 'user@email.com',
               isOwner: isOwner,
-              profilePictureUrl: localStorage.getItem('profilePictureUrl')
-            }
+              profilePictureUrl: localStorage.getItem('profilePictureUrl'),
+            },
           ],
-          items: itemsList.map(item => {
+          items: itemsList.map((item) => {
             const itemId = item.id ?? item.Id;
             const itemProdId = item.productId ?? item.ProductId;
             const prod = item.product ?? item.Product;
@@ -238,9 +241,9 @@ export default function App() {
               checked: isChecked,
               quantity: Number(quantity),
               unit: 'Pieces',
-              description: desc
+              description: desc,
             };
-          })
+          }),
         };
       });
       setLists(mapped);
@@ -250,25 +253,25 @@ export default function App() {
   // Ürün adını veritabanında arar, bulursa ID'sini döner, bulamazsa yeni ürün oluşturur (Casing-safe)
   const getOrCreateProduct = async (itemName) => {
     const t = localStorage.getItem('token');
-    const authOpts = { headers: { 'Authorization': `Bearer ${t}` } };
-    
+    const authOpts = { headers: { Authorization: `Bearer ${t}` } };
+
     const res = await getApiProducts(authOpts);
     const productData = res.data?.data ? res.data.data : res.data;
     const products = productData || [];
-    const existing = products.find(p => {
+    const existing = products.find((p) => {
       const name = p.productName ?? p.ProductName ?? '';
       return name.toLowerCase() === itemName.toLowerCase();
     });
     if (existing) {
       return existing.id ?? existing.Id;
     }
-    
+
     // API formatına uygun dinamik ürün payload'u
     const productPayload = buildPayload({
       productName: itemName,
-      description: ''
+      description: '',
     });
-    
+
     const createRes = await postApiProducts(productPayload, authOpts);
     const newProd = createRes.data?.data ? createRes.data.data : createRes.data;
     return newProd?.id ?? newProd?.Id;
@@ -277,7 +280,7 @@ export default function App() {
   // Liste başlığı veya etiketini güncelleme mantığı (API)
   const handleUpdateList = (listId, updatedFields) => {
     const listData = response?.data?.data ? response.data.data : response?.data;
-    const list = listData?.find(l => String(l.id ?? l.Id) === String(listId));
+    const list = listData?.find((l) => String(l.id ?? l.Id) === String(listId));
     if (!list) return;
 
     const listPayload = buildPayload({
@@ -285,25 +288,28 @@ export default function App() {
       title: updatedFields.title !== undefined ? updatedFields.title : (list.title ?? list.Title),
       tag: updatedFields.tag !== undefined ? updatedFields.tag : (list.tag ?? list.Tag),
       userId: Number(localStorage.getItem('userId')),
-      isShared: list.isShared ?? list.IsShared ?? false
+      isShared: list.isShared ?? list.IsShared ?? false,
     });
 
-    updateListMutation.mutate({
-      data: listPayload
-    }, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
+    updateListMutation.mutate(
+      {
+        data: listPayload,
       },
-      onError: (err) => {
-        alert("Liste güncellenemedi: " + err.message);
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
+        },
+        onError: (err) => {
+          alert('Liste güncellenemedi: ' + err.message);
+        },
       }
-    });
+    );
   };
 
   // 1. ÜRÜN TİK ATMA MANTIĞI (API)
   const handleToggleItem = (listId, itemId) => {
-    const list = lists.find(l => l.id === listId);
-    const item = list?.items.find(i => i.id === itemId);
+    const list = lists.find((l) => l.id === listId);
+    const item = list?.items.find((i) => i.id === itemId);
     if (!item) return;
 
     const togglePayload = buildPayload({
@@ -311,36 +317,39 @@ export default function App() {
       listId: Number(listId),
       productId: item.productId,
       quantity: item.quantity,
-      isChecked: !item.checked
+      isChecked: !item.checked,
     });
 
-    toggleItemMutation.mutate({
-      data: togglePayload
-    }, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
+    toggleItemMutation.mutate(
+      {
+        data: togglePayload,
       },
-      onError: (err) => {
-        alert("Ürün durumu güncellenemedi: " + err.message);
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
+        },
+        onError: (err) => {
+          alert('Ürün durumu güncellenemedi: ' + err.message);
+        },
       }
-    });
+    );
   };
 
   // 2. ÜRÜN EKLEME MANTIĞI (API)
   const handleAddItem = async (listId, itemName) => {
     try {
       const productId = await getOrCreateProduct(itemName);
-      if (!productId) throw new Error("Ürün oluşturulamadı.");
-      
+      if (!productId) throw new Error('Ürün oluşturulamadı.');
+
       const itemPayload = buildPayload({
         listId: Number(listId),
         productId: productId,
         quantity: 1,
-        isChecked: false
+        isChecked: false,
       });
-      
+
       const t = localStorage.getItem('token');
-      const authOpts = { headers: { 'Authorization': `Bearer ${t}` } };
+      const authOpts = { headers: { Authorization: `Bearer ${t}` } };
       await postApiShoppingListItems(itemPayload, authOpts);
       queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
     } catch (e) {
@@ -353,7 +362,7 @@ export default function App() {
   const handleSaveItem = async (updatedItem) => {
     try {
       const productId = await getOrCreateProduct(updatedItem.name);
-      if (!productId) throw new Error("Ürün bulunamadı veya oluşturulamadı.");
+      if (!productId) throw new Error('Ürün bulunamadı veya oluşturulamadı.');
 
       if (updatedItem.id) {
         // Güncelleme (PUT)
@@ -362,10 +371,10 @@ export default function App() {
           listId: Number(selectedListId),
           productId: productId,
           quantity: Number(updatedItem.quantity) || 1,
-          isChecked: updatedItem.checked || false
+          isChecked: updatedItem.checked || false,
         });
         const t = localStorage.getItem('token');
-        const authOpts = { headers: { 'Authorization': `Bearer ${t}` } };
+        const authOpts = { headers: { Authorization: `Bearer ${t}` } };
         await putApiShoppingListItems(itemPayload, authOpts);
       } else {
         // Yeni Ekleme (POST) - Modaldan gelen yeni ürün
@@ -373,10 +382,10 @@ export default function App() {
           listId: Number(selectedListId),
           productId: productId,
           quantity: Number(updatedItem.quantity) || 1,
-          isChecked: false
+          isChecked: false,
         });
         const t = localStorage.getItem('token');
-        const authOpts = { headers: { 'Authorization': `Bearer ${t}` } };
+        const authOpts = { headers: { Authorization: `Bearer ${t}` } };
         await postApiShoppingListItems(itemPayload, authOpts);
       }
 
@@ -390,20 +399,23 @@ export default function App() {
 
   // 4. ÜRÜN SİLME (API)
   const handleDeleteItem = (itemId) => {
-    deleteItemMutation.mutate({
-      id: Number(itemId)
-    }, {
-      onSuccess: () => {
-        queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
-        setEditingItem(null);
+    deleteItemMutation.mutate(
+      {
+        id: Number(itemId),
+      },
+      {
+        onSuccess: () => {
+          queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
+          setEditingItem(null);
+        },
       }
-    });
+    );
   };
 
   // 5. YENİ ORTAK ÇALIŞAN EKLEME (PAYLAŞMA - Mock)
   const handleAddCollaborator = (listId, email, role) => {
-    const list = lists.find(l => l.id === listId);
-    if (list.sharedWith.some(user => user.email.toLowerCase() === email.toLowerCase())) {
+    const list = lists.find((l) => l.id === listId);
+    if (list.sharedWith.some((user) => user.email.toLowerCase() === email.toLowerCase())) {
       alert('This user is already invited.');
       return;
     }
@@ -413,15 +425,15 @@ export default function App() {
       email,
       isOwner: false,
       role,
-      avatar: `https://images.unsplash.com/photo-${1500000000000 + Math.floor(Math.random() * 100000)}?w=150`
+      avatar: `https://images.unsplash.com/photo-${1500000000000 + Math.floor(Math.random() * 100000)}?w=150`,
     };
-    setLists(prevLists =>
-      prevLists.map(l => {
+    setLists((prevLists) =>
+      prevLists.map((l) => {
         if (l.id !== listId) return l;
         return {
           ...l,
           status: 'shared',
-          sharedWith: [...l.sharedWith, newCollab]
+          sharedWith: [...l.sharedWith, newCollab],
         };
       })
     );
@@ -435,7 +447,7 @@ export default function App() {
       try {
         await fetch(`/api/ListShares/${shareId}`, {
           method: 'DELETE',
-          headers: { 'Authorization': `Bearer ${t}` }
+          headers: { Authorization: `Bearer ${t}` },
         });
         setIsShareOpen(false); // Modal'ı kapat/aç yaparak yenilenmesini sağlayabiliriz
         setTimeout(() => setIsShareOpen(true), 50);
@@ -443,7 +455,7 @@ export default function App() {
         console.error('Failed to remove share', err);
       }
     } else {
-      alert("Role update is not fully implemented yet.");
+      alert('Role update is not fully implemented yet.');
     }
   };
 
@@ -455,9 +467,9 @@ export default function App() {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${t}`
+        Authorization: `Bearer ${t}`,
       },
-      body: JSON.stringify({ listId: Number(listId), inviteeEmail: email, role })
+      body: JSON.stringify({ listId: Number(listId), inviteeEmail: email, role }),
     });
     if (!res.ok) {
       const err = await res.json().catch(() => ({}));
@@ -470,9 +482,9 @@ export default function App() {
     const t = localStorage.getItem('token');
     await fetch(`/api/ListShares/${inviteId}/accept`, {
       method: 'PUT',
-      headers: { 'Authorization': `Bearer ${t}` }
+      headers: { Authorization: `Bearer ${t}` },
     });
-    setInvites(prev => prev.filter(i => i.id !== inviteId));
+    setInvites((prev) => prev.filter((i) => i.id !== inviteId));
     queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
   };
 
@@ -481,17 +493,17 @@ export default function App() {
     const t = localStorage.getItem('token');
     await fetch(`/api/ListShares/${inviteId}/decline`, {
       method: 'PUT',
-      headers: { 'Authorization': `Bearer ${t}` }
+      headers: { Authorization: `Bearer ${t}` },
     });
-    setInvites(prev => prev.filter(i => i.id !== inviteId));
+    setInvites((prev) => prev.filter((i) => i.id !== inviteId));
   };
 
   const handleClearChecked = async () => {
     if (!activeList) return;
-    const checkedItems = activeList.items.filter(item => item.checked);
+    const checkedItems = activeList.items.filter((item) => item.checked);
     try {
       const t = localStorage.getItem('token');
-      const authOpts = { headers: { 'Authorization': `Bearer ${t}` } };
+      const authOpts = { headers: { Authorization: `Bearer ${t}` } };
       for (const item of checkedItems) {
         await deleteApiShoppingListItemsId(Number(item.id), authOpts);
       }
@@ -504,25 +516,29 @@ export default function App() {
   const handleCopyList = () => {
     if (!activeList) return;
     const itemsText = activeList.items
-      .map(item => `${item.checked ? '[x]' : '[ ]'} ${item.name} (${item.quantity} ${item.unit})`)
+      .map((item) => `${item.checked ? '[x]' : '[ ]'} ${item.name} (${item.quantity} ${item.unit})`)
       .join('\n');
     const copyText = `${activeList.title}\n${itemsText}`;
 
-    navigator.clipboard.writeText(copyText)
+    navigator.clipboard
+      .writeText(copyText)
       .then(() => alert('List copied to clipboard!'))
-      .catch(err => console.error('Could not copy text: ', err));
+      .catch((err) => console.error('Could not copy text: ', err));
   };
 
   const handleDeleteList = () => {
     if (window.confirm('Are you sure you want to delete this list?')) {
-      deleteListMutation.mutate({
-        id: Number(selectedListId)
-      }, {
-        onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
-          setSelectedListId(null);
+      deleteListMutation.mutate(
+        {
+          id: Number(selectedListId),
+        },
+        {
+          onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
+            setSelectedListId(null);
+          },
         }
-      });
+      );
     }
   };
 
@@ -532,46 +548,49 @@ export default function App() {
 
   const handleCreateList = () => {
     const storedUserId = Number(localStorage.getItem('userId')) || 1;
-    
+
     const listPayload = buildPayload({
       title: `New Shopping List ${lists.length + 1}`,
       tag: 'New Tag',
       isShared: false,
-      userId: storedUserId
+      userId: storedUserId,
     });
 
-    createListMutation.mutate({
-      data: listPayload
-    }, {
-      onSuccess: async (res) => {
-        // Backend 201 Created ile yeni listeyi döndürüyor (Result pattern ile)
-        const rawData = res.data?.data ? res.data.data : res.data;
-        const newId = rawData?.id ?? rawData?.Id;
-        // Önce listeyi yenile, sonra seçili ID'yi ayarla
-        await queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
-        if (newId) {
-          setSelectedListId(String(newId));
-        }
+    createListMutation.mutate(
+      {
+        data: listPayload,
+      },
+      {
+        onSuccess: async (res) => {
+          // Backend 201 Created ile yeni listeyi döndürüyor (Result pattern ile)
+          const rawData = res.data?.data ? res.data.data : res.data;
+          const newId = rawData?.id ?? rawData?.Id;
+          // Önce listeyi yenile, sonra seçili ID'yi ayarla
+          await queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
+          if (newId) {
+            setSelectedListId(String(newId));
+          }
+        },
       }
-    });
+    );
   };
 
   const handleToggleDraft = async (listId) => {
-    try{
+    try {
       const t = localStorage.getItem('token');
       const res = await fetch(`/api/shoppinglists/${listId}/draft`, {
         method: 'PUT',
-        headers: {'Authorization' : `Bearer ${t}`}
-      })
+        headers: { Authorization: `Bearer ${t}` },
+      });
 
-      if(!res.ok) throw new Error("Taslak durumu değiştirilemedi!")
+      if (!res.ok) throw new Error('Taslak durumu değiştirilemedi!');
 
-      queryClient.invalidateQueries({queryKey: getGetApiShoppingListsQueryKey()})    
-    }catch (e){
+      queryClient.invalidateQueries({ queryKey: getGetApiShoppingListsQueryKey() });
+    } catch (e) {
       console.error(e);
       alert(e.message);
     }
-  }
+  };
 
   if (!token) {
     return <Login onLoginSuccess={handleLoginSuccess} />;
@@ -587,7 +606,7 @@ export default function App() {
           profilePictureUrl={profilePictureUrl}
           onProfilePicUpload={handleProfilePicUpload}
           onLogout={handleLogout}
-          onBellClick={() => setIsNotifOpen(v => !v)}
+          onBellClick={() => setIsNotifOpen((v) => !v)}
           inviteCount={invites.length}
         />
         <TabBar activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -615,13 +634,28 @@ export default function App() {
           />
         ) : (
           <div className="desktop-placeholder">
-            <svg width="150" height="150" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <svg
+              width="150"
+              height="150"
+              viewBox="0 0 200 200"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <rect x="20" y="50" width="160" height="110" rx="16" fill="#F4EBFF" />
-              <path d="M20 70C20 58.9543 29.0457 50 40 50H85L105 70H180V160H20V70Z" fill="#D6BBFB" opacity="0.7" />
-              <path d="M40 70H160C171.046 70 180 79.0457 180 90V150C180 161.046 171.046 170 160 170H40C28.9543 170 20 161.046 20 150V90C20 79.0457 28.9543 70 40 70Z" fill="#7F56D9" />
+              <path
+                d="M20 70C20 58.9543 29.0457 50 40 50H85L105 70H180V160H20V70Z"
+                fill="#D6BBFB"
+                opacity="0.7"
+              />
+              <path
+                d="M40 70H160C171.046 70 180 79.0457 180 90V150C180 161.046 171.046 170 160 170H40C28.9543 170 20 161.046 20 150V90C20 79.0457 28.9543 70 40 70Z"
+                fill="#7F56D9"
+              />
             </svg>
             <h3>Select a list to view details</h3>
-            <p>Choose a shopping list from the left panel to manage your items or create a new list.</p>
+            <p>
+              Choose a shopping list from the left panel to manage your items or create a new list.
+            </p>
           </div>
         )}
       </div>

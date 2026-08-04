@@ -10,7 +10,7 @@ export default function TabBar({ activeTab, setActiveTab }) {
   const tabs = [
     { id: 'recents', label: 'Recents' },
     { id: 'draft', label: 'Draft' },
-    { id: 'shared', label: 'Shared' }
+    { id: 'shared', label: 'Shared' },
   ];
 
   return (

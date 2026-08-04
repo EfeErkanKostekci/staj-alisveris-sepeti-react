@@ -78,4 +78,3 @@ export interface RegisterDto {
   /** @nullable */
   password?: string | null;
 }
-
