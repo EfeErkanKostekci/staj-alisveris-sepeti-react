@@ -19,6 +19,7 @@ import ListDetail from './components/ListDetail.jsx';
 import { EditItemModal, ShareModal, ListOptionsMenu } from './components/Modals.jsx';
 import NotificationsPanel from './components/NotificationsPanel.jsx';
 import Login from './components/Login.jsx';
+import AdvertisementsModal from './components/AdvertisementsModal.jsx';
 import { useQueryClient, useQuery } from '@tanstack/react-query';
 import {
   useGetApiShoppingLists,
@@ -57,6 +58,7 @@ export default function App() {
   const [isShareOpen, setIsShareOpen] = useState(false);
   const [isOptionsOpen, setIsOptionsOpen] = useState(false);
   const [isNotifOpen, setIsNotifOpen] = useState(false); // Bildirim paneli
+  const [isAdsOpen, setIsAdsOpen] = useState(false); // Reklam/Fırsat modalı
   const [invites, setInvites] = useState([]); // Bekleyen davetler
 
   // Aktif sekmeye göre listeleri filtreleme
@@ -607,6 +609,7 @@ export default function App() {
           onProfilePicUpload={handleProfilePicUpload}
           onLogout={handleLogout}
           onBellClick={() => setIsNotifOpen((v) => !v)}
+          onAwardClick={() => setIsAdsOpen(true)}
           inviteCount={invites.length}
         />
         <TabBar activeTab={activeTab} setActiveTab={setActiveTab} />
@@ -688,6 +691,11 @@ export default function App() {
           onClose={() => setIsNotifOpen(false)}
         />
       )}
+
+      <AdvertisementsModal 
+        isOpen={isAdsOpen} 
+        onClose={() => setIsAdsOpen(false)} 
+      />
 
       <ListOptionsMenu
         isOpen={isOptionsOpen}
