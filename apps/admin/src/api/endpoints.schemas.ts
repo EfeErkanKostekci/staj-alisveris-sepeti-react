@@ -4,10 +4,26 @@
  * AlisverisSepeti.API
  * OpenAPI spec version: 1.0
  */
-export interface ListShare {
+export interface Advertisement {
   id?: number;
-  userId?: number;
+  createdDate?: string;
+  /** @nullable */
+  updatedDate?: string | null;
+  isDeleted?: boolean;
+  /** @nullable */
+  title?: string | null;
+  /** @nullable */
+  description?: string | null;
+  /** @nullable */
+  productUrl?: string | null;
+  /** @nullable */
+  imageUrl?: string | null;
+}
+
+export interface InviteDto {
   listId?: number;
+  /** @nullable */
+  inviteeEmail?: string | null;
   /** @nullable */
   role?: string | null;
 }
@@ -19,8 +35,22 @@ export interface LoginDto {
   password?: string | null;
 }
 
+export interface Role {
+  id?: number;
+  createdDate?: string;
+  /** @nullable */
+  updatedDate?: string | null;
+  isDeleted?: boolean;
+  /** @nullable */
+  name?: string | null;
+}
+
 export interface User {
   id?: number;
+  createdDate?: string;
+  /** @nullable */
+  updatedDate?: string | null;
+  isDeleted?: boolean;
   /** @nullable */
   name?: string | null;
   /** @nullable */
@@ -33,10 +63,18 @@ export interface User {
   passwordSalt?: string | null;
   /** @nullable */
   shoppingLists?: ShoppingList[] | null;
+  /** @nullable */
+  profilePictureUrl?: string | null;
+  roleId?: number;
+  role?: Role;
 }
 
 export interface ShoppingList {
   id?: number;
+  createdDate?: string;
+  /** @nullable */
+  updatedDate?: string | null;
+  isDeleted?: boolean;
   /** @nullable */
   title?: string | null;
   /** @nullable */
@@ -46,10 +84,17 @@ export interface ShoppingList {
   user?: User;
   /** @nullable */
   shoppingListItems?: ShoppingListItem[] | null;
+  /** @nullable */
+  currentUserRole?: string | null;
+  isDraft?: boolean;
 }
 
 export interface ShoppingListItem {
   id?: number;
+  createdDate?: string;
+  /** @nullable */
+  updatedDate?: string | null;
+  isDeleted?: boolean;
   listId?: number;
   productId?: number;
   quantity?: number;
@@ -59,7 +104,11 @@ export interface ShoppingListItem {
 }
 
 export interface Product {
-  productId?: number;
+  id?: number;
+  createdDate?: string;
+  /** @nullable */
+  updatedDate?: string | null;
+  isDeleted?: boolean;
   /** @nullable */
   productName?: string | null;
   /** @nullable */
@@ -78,3 +127,12 @@ export interface RegisterDto {
   /** @nullable */
   password?: string | null;
 }
+
+export type GetDraftsParams = {
+id?: number;
+};
+
+export type PostApiUsersUploadProfilePictureBody = {
+  file?: Blob;
+};
+

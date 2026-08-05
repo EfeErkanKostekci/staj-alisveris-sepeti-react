@@ -13,6 +13,7 @@ export default function Header({
   userEmail,
   onLogout,
   onBellClick,
+  onAwardClick,
   inviteCount = 0,
   profilePictureUrl,
   onProfilePicUpload,
@@ -156,7 +157,7 @@ export default function Header({
 
       <div className="right-side">
         {/* Ödül/Madalya Butonu */}
-        <button className="icon-button award-btn" aria-label="Award badge">
+        <button className="icon-button award-btn" aria-label="Award badge" onClick={onAwardClick}>
           <svg
             width="20"
             height="20"
