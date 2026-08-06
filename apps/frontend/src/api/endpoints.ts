@@ -25,16 +25,25 @@ import type {
 
 import type {
   Advertisement,
+  AuthResponseDtoResult,
+  CollaboratorResponseDtoIEnumerableResult,
   ForgotPasswordDto,
-  GetDraftsParams,
   InviteDto,
+  InviteResponseDtoResult,
   LoginDto,
+  MyInvitesResponseDtoIEnumerableResult,
   PostApiUsersUploadProfilePictureBody,
   Product,
   RegisterDto,
+  RegisterResponseDtoResult,
+  ResendOtpDto,
   ResetPasswordDto,
+  Result,
   ShoppingList,
+  ShoppingListIEnumerableResult,
   ShoppingListItem,
+  ShoppingListResult,
+  TokenResponseDtoResult,
   User,
   VerifyOtpDto
 } from './endpoints.schemas';
@@ -374,17 +383,44 @@ export function useGetApiAdvertisementsId<TData = Awaited<ReturnType<typeof getA
 
 
 
-export type postApiAuthRegisterResponse200 = {
-  data: void
+export type postApiAuthRegisterResponse200TextPlain = {
+  data: AuthResponseDtoResult
   status: 200
 }
 
-export type postApiAuthRegisterResponseSuccess = (postApiAuthRegisterResponse200) & {
+export type postApiAuthRegisterResponse200ApplicationJson = {
+  data: AuthResponseDtoResult
+  status: 200
+}
+
+export type postApiAuthRegisterResponse200TextJson = {
+  data: AuthResponseDtoResult
+  status: 200
+}
+
+export type postApiAuthRegisterResponse400TextPlain = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthRegisterResponse400ApplicationJson = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthRegisterResponse400TextJson = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthRegisterResponseSuccess = (postApiAuthRegisterResponse200TextPlain | postApiAuthRegisterResponse200ApplicationJson | postApiAuthRegisterResponse200TextJson) & {
   headers: Headers;
 };
-;
+export type postApiAuthRegisterResponseError = (postApiAuthRegisterResponse400TextPlain | postApiAuthRegisterResponse400ApplicationJson | postApiAuthRegisterResponse400TextJson) & {
+  headers: Headers;
+};
 
-export type postApiAuthRegisterResponse = (postApiAuthRegisterResponseSuccess)
+export type postApiAuthRegisterResponse = (postApiAuthRegisterResponseSuccess | postApiAuthRegisterResponseError)
 
 export const getPostApiAuthRegisterUrl = () => {
 
@@ -405,10 +441,10 @@ export const postApiAuthRegister = async (registerDto?: RegisterDto, options?: R
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: postApiAuthRegisterResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: postApiAuthRegisterResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as postApiAuthRegisterResponse
 }
 
@@ -416,7 +452,7 @@ export const postApiAuthRegister = async (registerDto?: RegisterDto, options?: R
 
 
 
-export const getPostApiAuthRegisterMutationOptions = <TError = unknown,
+export const getPostApiAuthRegisterMutationOptions = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRegister>>, TError,{data?: RegisterDto}, TContext>, fetch?: RequestInit}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRegister>>, TError,{data?: RegisterDto}, TContext> => {
 
@@ -445,9 +481,9 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type PostApiAuthRegisterMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthRegister>>>
     export type PostApiAuthRegisterMutationBody = RegisterDto | undefined
-    export type PostApiAuthRegisterMutationError = unknown
+    export type PostApiAuthRegisterMutationError = Result
 
-    export const usePostApiAuthRegister = <TError = unknown,
+    export const usePostApiAuthRegister = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthRegister>>, TError,{data?: RegisterDto}, TContext>, fetch?: RequestInit}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiAuthRegister>>,
@@ -458,17 +494,44 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getPostApiAuthRegisterMutationOptions(options), queryClient);
     }
 
-export type postApiAuthVerifyRegisterResponse200 = {
-  data: void
+export type postApiAuthVerifyRegisterResponse200TextPlain = {
+  data: RegisterResponseDtoResult
   status: 200
 }
 
-export type postApiAuthVerifyRegisterResponseSuccess = (postApiAuthVerifyRegisterResponse200) & {
+export type postApiAuthVerifyRegisterResponse200ApplicationJson = {
+  data: RegisterResponseDtoResult
+  status: 200
+}
+
+export type postApiAuthVerifyRegisterResponse200TextJson = {
+  data: RegisterResponseDtoResult
+  status: 200
+}
+
+export type postApiAuthVerifyRegisterResponse400TextPlain = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthVerifyRegisterResponse400ApplicationJson = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthVerifyRegisterResponse400TextJson = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthVerifyRegisterResponseSuccess = (postApiAuthVerifyRegisterResponse200TextPlain | postApiAuthVerifyRegisterResponse200ApplicationJson | postApiAuthVerifyRegisterResponse200TextJson) & {
   headers: Headers;
 };
-;
+export type postApiAuthVerifyRegisterResponseError = (postApiAuthVerifyRegisterResponse400TextPlain | postApiAuthVerifyRegisterResponse400ApplicationJson | postApiAuthVerifyRegisterResponse400TextJson) & {
+  headers: Headers;
+};
 
-export type postApiAuthVerifyRegisterResponse = (postApiAuthVerifyRegisterResponseSuccess)
+export type postApiAuthVerifyRegisterResponse = (postApiAuthVerifyRegisterResponseSuccess | postApiAuthVerifyRegisterResponseError)
 
 export const getPostApiAuthVerifyRegisterUrl = () => {
 
@@ -489,10 +552,10 @@ export const postApiAuthVerifyRegister = async (verifyOtpDto?: VerifyOtpDto, opt
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: postApiAuthVerifyRegisterResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: postApiAuthVerifyRegisterResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as postApiAuthVerifyRegisterResponse
 }
 
@@ -500,7 +563,7 @@ export const postApiAuthVerifyRegister = async (verifyOtpDto?: VerifyOtpDto, opt
 
 
 
-export const getPostApiAuthVerifyRegisterMutationOptions = <TError = unknown,
+export const getPostApiAuthVerifyRegisterMutationOptions = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyRegister>>, TError,{data?: VerifyOtpDto}, TContext>, fetch?: RequestInit}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyRegister>>, TError,{data?: VerifyOtpDto}, TContext> => {
 
@@ -529,9 +592,9 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type PostApiAuthVerifyRegisterMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthVerifyRegister>>>
     export type PostApiAuthVerifyRegisterMutationBody = VerifyOtpDto | undefined
-    export type PostApiAuthVerifyRegisterMutationError = unknown
+    export type PostApiAuthVerifyRegisterMutationError = Result
 
-    export const usePostApiAuthVerifyRegister = <TError = unknown,
+    export const usePostApiAuthVerifyRegister = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyRegister>>, TError,{data?: VerifyOtpDto}, TContext>, fetch?: RequestInit}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiAuthVerifyRegister>>,
@@ -542,17 +605,44 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getPostApiAuthVerifyRegisterMutationOptions(options), queryClient);
     }
 
-export type postApiAuthLoginResponse200 = {
-  data: void
+export type postApiAuthLoginResponse200TextPlain = {
+  data: AuthResponseDtoResult
   status: 200
 }
 
-export type postApiAuthLoginResponseSuccess = (postApiAuthLoginResponse200) & {
+export type postApiAuthLoginResponse200ApplicationJson = {
+  data: AuthResponseDtoResult
+  status: 200
+}
+
+export type postApiAuthLoginResponse200TextJson = {
+  data: AuthResponseDtoResult
+  status: 200
+}
+
+export type postApiAuthLoginResponse400TextPlain = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthLoginResponse400ApplicationJson = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthLoginResponse400TextJson = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthLoginResponseSuccess = (postApiAuthLoginResponse200TextPlain | postApiAuthLoginResponse200ApplicationJson | postApiAuthLoginResponse200TextJson) & {
   headers: Headers;
 };
-;
+export type postApiAuthLoginResponseError = (postApiAuthLoginResponse400TextPlain | postApiAuthLoginResponse400ApplicationJson | postApiAuthLoginResponse400TextJson) & {
+  headers: Headers;
+};
 
-export type postApiAuthLoginResponse = (postApiAuthLoginResponseSuccess)
+export type postApiAuthLoginResponse = (postApiAuthLoginResponseSuccess | postApiAuthLoginResponseError)
 
 export const getPostApiAuthLoginUrl = () => {
 
@@ -573,10 +663,10 @@ export const postApiAuthLogin = async (loginDto?: LoginDto, options?: RequestIni
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: postApiAuthLoginResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: postApiAuthLoginResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as postApiAuthLoginResponse
 }
 
@@ -584,7 +674,7 @@ export const postApiAuthLogin = async (loginDto?: LoginDto, options?: RequestIni
 
 
 
-export const getPostApiAuthLoginMutationOptions = <TError = unknown,
+export const getPostApiAuthLoginMutationOptions = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthLogin>>, TError,{data?: LoginDto}, TContext>, fetch?: RequestInit}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthLogin>>, TError,{data?: LoginDto}, TContext> => {
 
@@ -613,9 +703,9 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type PostApiAuthLoginMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthLogin>>>
     export type PostApiAuthLoginMutationBody = LoginDto | undefined
-    export type PostApiAuthLoginMutationError = unknown
+    export type PostApiAuthLoginMutationError = Result
 
-    export const usePostApiAuthLogin = <TError = unknown,
+    export const usePostApiAuthLogin = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthLogin>>, TError,{data?: LoginDto}, TContext>, fetch?: RequestInit}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiAuthLogin>>,
@@ -626,17 +716,44 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getPostApiAuthLoginMutationOptions(options), queryClient);
     }
 
-export type postApiAuthVerifyLoginResponse200 = {
-  data: void
+export type postApiAuthVerifyLoginResponse200TextPlain = {
+  data: TokenResponseDtoResult
   status: 200
 }
 
-export type postApiAuthVerifyLoginResponseSuccess = (postApiAuthVerifyLoginResponse200) & {
+export type postApiAuthVerifyLoginResponse200ApplicationJson = {
+  data: TokenResponseDtoResult
+  status: 200
+}
+
+export type postApiAuthVerifyLoginResponse200TextJson = {
+  data: TokenResponseDtoResult
+  status: 200
+}
+
+export type postApiAuthVerifyLoginResponse400TextPlain = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthVerifyLoginResponse400ApplicationJson = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthVerifyLoginResponse400TextJson = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthVerifyLoginResponseSuccess = (postApiAuthVerifyLoginResponse200TextPlain | postApiAuthVerifyLoginResponse200ApplicationJson | postApiAuthVerifyLoginResponse200TextJson) & {
   headers: Headers;
 };
-;
+export type postApiAuthVerifyLoginResponseError = (postApiAuthVerifyLoginResponse400TextPlain | postApiAuthVerifyLoginResponse400ApplicationJson | postApiAuthVerifyLoginResponse400TextJson) & {
+  headers: Headers;
+};
 
-export type postApiAuthVerifyLoginResponse = (postApiAuthVerifyLoginResponseSuccess)
+export type postApiAuthVerifyLoginResponse = (postApiAuthVerifyLoginResponseSuccess | postApiAuthVerifyLoginResponseError)
 
 export const getPostApiAuthVerifyLoginUrl = () => {
 
@@ -657,10 +774,10 @@ export const postApiAuthVerifyLogin = async (verifyOtpDto?: VerifyOtpDto, option
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: postApiAuthVerifyLoginResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: postApiAuthVerifyLoginResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as postApiAuthVerifyLoginResponse
 }
 
@@ -668,7 +785,7 @@ export const postApiAuthVerifyLogin = async (verifyOtpDto?: VerifyOtpDto, option
 
 
 
-export const getPostApiAuthVerifyLoginMutationOptions = <TError = unknown,
+export const getPostApiAuthVerifyLoginMutationOptions = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyLogin>>, TError,{data?: VerifyOtpDto}, TContext>, fetch?: RequestInit}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyLogin>>, TError,{data?: VerifyOtpDto}, TContext> => {
 
@@ -697,9 +814,9 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type PostApiAuthVerifyLoginMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthVerifyLogin>>>
     export type PostApiAuthVerifyLoginMutationBody = VerifyOtpDto | undefined
-    export type PostApiAuthVerifyLoginMutationError = unknown
+    export type PostApiAuthVerifyLoginMutationError = Result
 
-    export const usePostApiAuthVerifyLogin = <TError = unknown,
+    export const usePostApiAuthVerifyLogin = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyLogin>>, TError,{data?: VerifyOtpDto}, TContext>, fetch?: RequestInit}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiAuthVerifyLogin>>,
@@ -710,12 +827,116 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getPostApiAuthVerifyLoginMutationOptions(options), queryClient);
     }
 
-export type postApiAuthForgotPasswordResponse200 = {
-  data: void
+export type postApiAuthResendOtpResponse200TextPlain = {
+  data: Result
   status: 200
 }
 
-export type postApiAuthForgotPasswordResponseSuccess = (postApiAuthForgotPasswordResponse200) & {
+export type postApiAuthResendOtpResponse200ApplicationJson = {
+  data: Result
+  status: 200
+}
+
+export type postApiAuthResendOtpResponse200TextJson = {
+  data: Result
+  status: 200
+}
+
+export type postApiAuthResendOtpResponseSuccess = (postApiAuthResendOtpResponse200TextPlain | postApiAuthResendOtpResponse200ApplicationJson | postApiAuthResendOtpResponse200TextJson) & {
+  headers: Headers;
+};
+;
+
+export type postApiAuthResendOtpResponse = (postApiAuthResendOtpResponseSuccess)
+
+export const getPostApiAuthResendOtpUrl = () => {
+
+
+
+
+  return `/api/Auth/resend-otp`
+}
+
+export const postApiAuthResendOtp = async (resendOtpDto?: ResendOtpDto, options?: RequestInit): Promise<postApiAuthResendOtpResponse> => {
+
+  const res = await fetch(getPostApiAuthResendOtpUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(resendOtpDto)
+  }
+)
+
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: postApiAuthResendOtpResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
+  return { data, status: res.status, headers: res.headers } as postApiAuthResendOtpResponse
+}
+
+
+
+
+
+export const getPostApiAuthResendOtpMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthResendOtp>>, TError,{data?: ResendOtpDto}, TContext>, fetch?: RequestInit}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthResendOtp>>, TError,{data?: ResendOtpDto}, TContext> => {
+
+const mutationKey = ['postApiAuthResendOtp'];
+const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, fetch: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthResendOtp>>, {data?: ResendOtpDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAuthResendOtp(data,fetchOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAuthResendOtpMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthResendOtp>>>
+    export type PostApiAuthResendOtpMutationBody = ResendOtpDto | undefined
+    export type PostApiAuthResendOtpMutationError = unknown
+
+    export const usePostApiAuthResendOtp = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthResendOtp>>, TError,{data?: ResendOtpDto}, TContext>, fetch?: RequestInit}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAuthResendOtp>>,
+        TError,
+        {data?: ResendOtpDto},
+        TContext
+      > => {
+      return useMutation(getPostApiAuthResendOtpMutationOptions(options), queryClient);
+    }
+
+export type postApiAuthForgotPasswordResponse200TextPlain = {
+  data: Result
+  status: 200
+}
+
+export type postApiAuthForgotPasswordResponse200ApplicationJson = {
+  data: Result
+  status: 200
+}
+
+export type postApiAuthForgotPasswordResponse200TextJson = {
+  data: Result
+  status: 200
+}
+
+export type postApiAuthForgotPasswordResponseSuccess = (postApiAuthForgotPasswordResponse200TextPlain | postApiAuthForgotPasswordResponse200ApplicationJson | postApiAuthForgotPasswordResponse200TextJson) & {
   headers: Headers;
 };
 ;
@@ -741,10 +962,10 @@ export const postApiAuthForgotPassword = async (forgotPasswordDto?: ForgotPasswo
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: postApiAuthForgotPasswordResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: postApiAuthForgotPasswordResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as postApiAuthForgotPasswordResponse
 }
 
@@ -794,17 +1015,44 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getPostApiAuthForgotPasswordMutationOptions(options), queryClient);
     }
 
-export type postApiAuthResetPasswordResponse200 = {
-  data: void
+export type postApiAuthResetPasswordResponse200TextPlain = {
+  data: Result
   status: 200
 }
 
-export type postApiAuthResetPasswordResponseSuccess = (postApiAuthResetPasswordResponse200) & {
+export type postApiAuthResetPasswordResponse200ApplicationJson = {
+  data: Result
+  status: 200
+}
+
+export type postApiAuthResetPasswordResponse200TextJson = {
+  data: Result
+  status: 200
+}
+
+export type postApiAuthResetPasswordResponse400TextPlain = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthResetPasswordResponse400ApplicationJson = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthResetPasswordResponse400TextJson = {
+  data: Result
+  status: 400
+}
+
+export type postApiAuthResetPasswordResponseSuccess = (postApiAuthResetPasswordResponse200TextPlain | postApiAuthResetPasswordResponse200ApplicationJson | postApiAuthResetPasswordResponse200TextJson) & {
   headers: Headers;
 };
-;
+export type postApiAuthResetPasswordResponseError = (postApiAuthResetPasswordResponse400TextPlain | postApiAuthResetPasswordResponse400ApplicationJson | postApiAuthResetPasswordResponse400TextJson) & {
+  headers: Headers;
+};
 
-export type postApiAuthResetPasswordResponse = (postApiAuthResetPasswordResponseSuccess)
+export type postApiAuthResetPasswordResponse = (postApiAuthResetPasswordResponseSuccess | postApiAuthResetPasswordResponseError)
 
 export const getPostApiAuthResetPasswordUrl = () => {
 
@@ -825,10 +1073,10 @@ export const postApiAuthResetPassword = async (resetPasswordDto?: ResetPasswordD
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: postApiAuthResetPasswordResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: postApiAuthResetPasswordResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as postApiAuthResetPasswordResponse
 }
 
@@ -836,7 +1084,7 @@ export const postApiAuthResetPassword = async (resetPasswordDto?: ResetPasswordD
 
 
 
-export const getPostApiAuthResetPasswordMutationOptions = <TError = unknown,
+export const getPostApiAuthResetPasswordMutationOptions = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthResetPassword>>, TError,{data?: ResetPasswordDto}, TContext>, fetch?: RequestInit}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthResetPassword>>, TError,{data?: ResetPasswordDto}, TContext> => {
 
@@ -865,9 +1113,9 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type PostApiAuthResetPasswordMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthResetPassword>>>
     export type PostApiAuthResetPasswordMutationBody = ResetPasswordDto | undefined
-    export type PostApiAuthResetPasswordMutationError = unknown
+    export type PostApiAuthResetPasswordMutationError = Result
 
-    export const usePostApiAuthResetPassword = <TError = unknown,
+    export const usePostApiAuthResetPassword = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthResetPassword>>, TError,{data?: ResetPasswordDto}, TContext>, fetch?: RequestInit}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiAuthResetPassword>>,
@@ -878,17 +1126,74 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getPostApiAuthResetPasswordMutationOptions(options), queryClient);
     }
 
-export type postApiListSharesInviteResponse200 = {
-  data: void
-  status: 200
+export type postApiListSharesInviteResponse201TextPlain = {
+  data: InviteResponseDtoResult
+  status: 201
 }
 
-export type postApiListSharesInviteResponseSuccess = (postApiListSharesInviteResponse200) & {
+export type postApiListSharesInviteResponse201ApplicationJson = {
+  data: InviteResponseDtoResult
+  status: 201
+}
+
+export type postApiListSharesInviteResponse201TextJson = {
+  data: InviteResponseDtoResult
+  status: 201
+}
+
+export type postApiListSharesInviteResponse400TextPlain = {
+  data: Result
+  status: 400
+}
+
+export type postApiListSharesInviteResponse400ApplicationJson = {
+  data: Result
+  status: 400
+}
+
+export type postApiListSharesInviteResponse400TextJson = {
+  data: Result
+  status: 400
+}
+
+export type postApiListSharesInviteResponse403TextPlain = {
+  data: Result
+  status: 403
+}
+
+export type postApiListSharesInviteResponse403ApplicationJson = {
+  data: Result
+  status: 403
+}
+
+export type postApiListSharesInviteResponse403TextJson = {
+  data: Result
+  status: 403
+}
+
+export type postApiListSharesInviteResponse404TextPlain = {
+  data: Result
+  status: 404
+}
+
+export type postApiListSharesInviteResponse404ApplicationJson = {
+  data: Result
+  status: 404
+}
+
+export type postApiListSharesInviteResponse404TextJson = {
+  data: Result
+  status: 404
+}
+
+export type postApiListSharesInviteResponseSuccess = (postApiListSharesInviteResponse201TextPlain | postApiListSharesInviteResponse201ApplicationJson | postApiListSharesInviteResponse201TextJson) & {
   headers: Headers;
 };
-;
+export type postApiListSharesInviteResponseError = (postApiListSharesInviteResponse400TextPlain | postApiListSharesInviteResponse400ApplicationJson | postApiListSharesInviteResponse400TextJson | postApiListSharesInviteResponse403TextPlain | postApiListSharesInviteResponse403ApplicationJson | postApiListSharesInviteResponse403TextJson | postApiListSharesInviteResponse404TextPlain | postApiListSharesInviteResponse404ApplicationJson | postApiListSharesInviteResponse404TextJson) & {
+  headers: Headers;
+};
 
-export type postApiListSharesInviteResponse = (postApiListSharesInviteResponseSuccess)
+export type postApiListSharesInviteResponse = (postApiListSharesInviteResponseSuccess | postApiListSharesInviteResponseError)
 
 export const getPostApiListSharesInviteUrl = () => {
 
@@ -909,10 +1214,10 @@ export const postApiListSharesInvite = async (inviteDto?: InviteDto, options?: R
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: postApiListSharesInviteResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: postApiListSharesInviteResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as postApiListSharesInviteResponse
 }
 
@@ -920,7 +1225,7 @@ export const postApiListSharesInvite = async (inviteDto?: InviteDto, options?: R
 
 
 
-export const getPostApiListSharesInviteMutationOptions = <TError = unknown,
+export const getPostApiListSharesInviteMutationOptions = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiListSharesInvite>>, TError,{data?: InviteDto}, TContext>, fetch?: RequestInit}
 ): UseMutationOptions<Awaited<ReturnType<typeof postApiListSharesInvite>>, TError,{data?: InviteDto}, TContext> => {
 
@@ -949,9 +1254,9 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type PostApiListSharesInviteMutationResult = NonNullable<Awaited<ReturnType<typeof postApiListSharesInvite>>>
     export type PostApiListSharesInviteMutationBody = InviteDto | undefined
-    export type PostApiListSharesInviteMutationError = unknown
+    export type PostApiListSharesInviteMutationError = Result
 
-    export const usePostApiListSharesInvite = <TError = unknown,
+    export const usePostApiListSharesInvite = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiListSharesInvite>>, TError,{data?: InviteDto}, TContext>, fetch?: RequestInit}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof postApiListSharesInvite>>,
@@ -962,12 +1267,22 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getPostApiListSharesInviteMutationOptions(options), queryClient);
     }
 
-export type getApiListSharesMyInvitesResponse200 = {
-  data: void
+export type getApiListSharesMyInvitesResponse200TextPlain = {
+  data: MyInvitesResponseDtoIEnumerableResult
   status: 200
 }
 
-export type getApiListSharesMyInvitesResponseSuccess = (getApiListSharesMyInvitesResponse200) & {
+export type getApiListSharesMyInvitesResponse200ApplicationJson = {
+  data: MyInvitesResponseDtoIEnumerableResult
+  status: 200
+}
+
+export type getApiListSharesMyInvitesResponse200TextJson = {
+  data: MyInvitesResponseDtoIEnumerableResult
+  status: 200
+}
+
+export type getApiListSharesMyInvitesResponseSuccess = (getApiListSharesMyInvitesResponse200TextPlain | getApiListSharesMyInvitesResponse200ApplicationJson | getApiListSharesMyInvitesResponse200TextJson) & {
   headers: Headers;
 };
 ;
@@ -993,10 +1308,10 @@ export const getApiListSharesMyInvites = async ( options?: RequestInit): Promise
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: getApiListSharesMyInvitesResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: getApiListSharesMyInvitesResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as getApiListSharesMyInvitesResponse
 }
 
@@ -1076,17 +1391,59 @@ export function useGetApiListSharesMyInvites<TData = Awaited<ReturnType<typeof g
 
 
 
-export type putApiListSharesIdAcceptResponse200 = {
-  data: void
+export type putApiListSharesIdAcceptResponse200TextPlain = {
+  data: Result
   status: 200
 }
 
-export type putApiListSharesIdAcceptResponseSuccess = (putApiListSharesIdAcceptResponse200) & {
+export type putApiListSharesIdAcceptResponse200ApplicationJson = {
+  data: Result
+  status: 200
+}
+
+export type putApiListSharesIdAcceptResponse200TextJson = {
+  data: Result
+  status: 200
+}
+
+export type putApiListSharesIdAcceptResponse400TextPlain = {
+  data: Result
+  status: 400
+}
+
+export type putApiListSharesIdAcceptResponse400ApplicationJson = {
+  data: Result
+  status: 400
+}
+
+export type putApiListSharesIdAcceptResponse400TextJson = {
+  data: Result
+  status: 400
+}
+
+export type putApiListSharesIdAcceptResponse403TextPlain = {
+  data: Result
+  status: 403
+}
+
+export type putApiListSharesIdAcceptResponse403ApplicationJson = {
+  data: Result
+  status: 403
+}
+
+export type putApiListSharesIdAcceptResponse403TextJson = {
+  data: Result
+  status: 403
+}
+
+export type putApiListSharesIdAcceptResponseSuccess = (putApiListSharesIdAcceptResponse200TextPlain | putApiListSharesIdAcceptResponse200ApplicationJson | putApiListSharesIdAcceptResponse200TextJson) & {
   headers: Headers;
 };
-;
+export type putApiListSharesIdAcceptResponseError = (putApiListSharesIdAcceptResponse400TextPlain | putApiListSharesIdAcceptResponse400ApplicationJson | putApiListSharesIdAcceptResponse400TextJson | putApiListSharesIdAcceptResponse403TextPlain | putApiListSharesIdAcceptResponse403ApplicationJson | putApiListSharesIdAcceptResponse403TextJson) & {
+  headers: Headers;
+};
 
-export type putApiListSharesIdAcceptResponse = (putApiListSharesIdAcceptResponseSuccess)
+export type putApiListSharesIdAcceptResponse = (putApiListSharesIdAcceptResponseSuccess | putApiListSharesIdAcceptResponseError)
 
 export const getPutApiListSharesIdAcceptUrl = (id: number,) => {
 
@@ -1107,10 +1464,10 @@ export const putApiListSharesIdAccept = async (id: number, options?: RequestInit
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: putApiListSharesIdAcceptResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: putApiListSharesIdAcceptResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as putApiListSharesIdAcceptResponse
 }
 
@@ -1118,7 +1475,7 @@ export const putApiListSharesIdAccept = async (id: number, options?: RequestInit
 
 
 
-export const getPutApiListSharesIdAcceptMutationOptions = <TError = unknown,
+export const getPutApiListSharesIdAcceptMutationOptions = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiListSharesIdAccept>>, TError,{id: number}, TContext>, fetch?: RequestInit}
 ): UseMutationOptions<Awaited<ReturnType<typeof putApiListSharesIdAccept>>, TError,{id: number}, TContext> => {
 
@@ -1147,9 +1504,9 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type PutApiListSharesIdAcceptMutationResult = NonNullable<Awaited<ReturnType<typeof putApiListSharesIdAccept>>>
 
-    export type PutApiListSharesIdAcceptMutationError = unknown
+    export type PutApiListSharesIdAcceptMutationError = Result
 
-    export const usePutApiListSharesIdAccept = <TError = unknown,
+    export const usePutApiListSharesIdAccept = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiListSharesIdAccept>>, TError,{id: number}, TContext>, fetch?: RequestInit}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof putApiListSharesIdAccept>>,
@@ -1160,17 +1517,59 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getPutApiListSharesIdAcceptMutationOptions(options), queryClient);
     }
 
-export type putApiListSharesIdDeclineResponse200 = {
-  data: void
+export type putApiListSharesIdDeclineResponse200TextPlain = {
+  data: Result
   status: 200
 }
 
-export type putApiListSharesIdDeclineResponseSuccess = (putApiListSharesIdDeclineResponse200) & {
+export type putApiListSharesIdDeclineResponse200ApplicationJson = {
+  data: Result
+  status: 200
+}
+
+export type putApiListSharesIdDeclineResponse200TextJson = {
+  data: Result
+  status: 200
+}
+
+export type putApiListSharesIdDeclineResponse400TextPlain = {
+  data: Result
+  status: 400
+}
+
+export type putApiListSharesIdDeclineResponse400ApplicationJson = {
+  data: Result
+  status: 400
+}
+
+export type putApiListSharesIdDeclineResponse400TextJson = {
+  data: Result
+  status: 400
+}
+
+export type putApiListSharesIdDeclineResponse403TextPlain = {
+  data: Result
+  status: 403
+}
+
+export type putApiListSharesIdDeclineResponse403ApplicationJson = {
+  data: Result
+  status: 403
+}
+
+export type putApiListSharesIdDeclineResponse403TextJson = {
+  data: Result
+  status: 403
+}
+
+export type putApiListSharesIdDeclineResponseSuccess = (putApiListSharesIdDeclineResponse200TextPlain | putApiListSharesIdDeclineResponse200ApplicationJson | putApiListSharesIdDeclineResponse200TextJson) & {
   headers: Headers;
 };
-;
+export type putApiListSharesIdDeclineResponseError = (putApiListSharesIdDeclineResponse400TextPlain | putApiListSharesIdDeclineResponse400ApplicationJson | putApiListSharesIdDeclineResponse400TextJson | putApiListSharesIdDeclineResponse403TextPlain | putApiListSharesIdDeclineResponse403ApplicationJson | putApiListSharesIdDeclineResponse403TextJson) & {
+  headers: Headers;
+};
 
-export type putApiListSharesIdDeclineResponse = (putApiListSharesIdDeclineResponseSuccess)
+export type putApiListSharesIdDeclineResponse = (putApiListSharesIdDeclineResponseSuccess | putApiListSharesIdDeclineResponseError)
 
 export const getPutApiListSharesIdDeclineUrl = (id: number,) => {
 
@@ -1191,10 +1590,10 @@ export const putApiListSharesIdDecline = async (id: number, options?: RequestIni
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: putApiListSharesIdDeclineResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: putApiListSharesIdDeclineResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as putApiListSharesIdDeclineResponse
 }
 
@@ -1202,7 +1601,7 @@ export const putApiListSharesIdDecline = async (id: number, options?: RequestIni
 
 
 
-export const getPutApiListSharesIdDeclineMutationOptions = <TError = unknown,
+export const getPutApiListSharesIdDeclineMutationOptions = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiListSharesIdDecline>>, TError,{id: number}, TContext>, fetch?: RequestInit}
 ): UseMutationOptions<Awaited<ReturnType<typeof putApiListSharesIdDecline>>, TError,{id: number}, TContext> => {
 
@@ -1231,9 +1630,9 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type PutApiListSharesIdDeclineMutationResult = NonNullable<Awaited<ReturnType<typeof putApiListSharesIdDecline>>>
 
-    export type PutApiListSharesIdDeclineMutationError = unknown
+    export type PutApiListSharesIdDeclineMutationError = Result
 
-    export const usePutApiListSharesIdDecline = <TError = unknown,
+    export const usePutApiListSharesIdDecline = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiListSharesIdDecline>>, TError,{id: number}, TContext>, fetch?: RequestInit}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof putApiListSharesIdDecline>>,
@@ -1244,17 +1643,59 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getPutApiListSharesIdDeclineMutationOptions(options), queryClient);
     }
 
-export type getApiListSharesListListIdCollaboratorsResponse200 = {
-  data: void
+export type getApiListSharesListListIdCollaboratorsResponse200TextPlain = {
+  data: CollaboratorResponseDtoIEnumerableResult
   status: 200
 }
 
-export type getApiListSharesListListIdCollaboratorsResponseSuccess = (getApiListSharesListListIdCollaboratorsResponse200) & {
+export type getApiListSharesListListIdCollaboratorsResponse200ApplicationJson = {
+  data: CollaboratorResponseDtoIEnumerableResult
+  status: 200
+}
+
+export type getApiListSharesListListIdCollaboratorsResponse200TextJson = {
+  data: CollaboratorResponseDtoIEnumerableResult
+  status: 200
+}
+
+export type getApiListSharesListListIdCollaboratorsResponse403TextPlain = {
+  data: Result
+  status: 403
+}
+
+export type getApiListSharesListListIdCollaboratorsResponse403ApplicationJson = {
+  data: Result
+  status: 403
+}
+
+export type getApiListSharesListListIdCollaboratorsResponse403TextJson = {
+  data: Result
+  status: 403
+}
+
+export type getApiListSharesListListIdCollaboratorsResponse404TextPlain = {
+  data: Result
+  status: 404
+}
+
+export type getApiListSharesListListIdCollaboratorsResponse404ApplicationJson = {
+  data: Result
+  status: 404
+}
+
+export type getApiListSharesListListIdCollaboratorsResponse404TextJson = {
+  data: Result
+  status: 404
+}
+
+export type getApiListSharesListListIdCollaboratorsResponseSuccess = (getApiListSharesListListIdCollaboratorsResponse200TextPlain | getApiListSharesListListIdCollaboratorsResponse200ApplicationJson | getApiListSharesListListIdCollaboratorsResponse200TextJson) & {
   headers: Headers;
 };
-;
+export type getApiListSharesListListIdCollaboratorsResponseError = (getApiListSharesListListIdCollaboratorsResponse403TextPlain | getApiListSharesListListIdCollaboratorsResponse403ApplicationJson | getApiListSharesListListIdCollaboratorsResponse403TextJson | getApiListSharesListListIdCollaboratorsResponse404TextPlain | getApiListSharesListListIdCollaboratorsResponse404ApplicationJson | getApiListSharesListListIdCollaboratorsResponse404TextJson) & {
+  headers: Headers;
+};
 
-export type getApiListSharesListListIdCollaboratorsResponse = (getApiListSharesListListIdCollaboratorsResponseSuccess)
+export type getApiListSharesListListIdCollaboratorsResponse = (getApiListSharesListListIdCollaboratorsResponseSuccess | getApiListSharesListListIdCollaboratorsResponseError)
 
 export const getGetApiListSharesListListIdCollaboratorsUrl = (listId: number,) => {
 
@@ -1275,10 +1716,10 @@ export const getApiListSharesListListIdCollaborators = async (listId: number, op
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: getApiListSharesListListIdCollaboratorsResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: getApiListSharesListListIdCollaboratorsResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as getApiListSharesListListIdCollaboratorsResponse
 }
 
@@ -1293,7 +1734,7 @@ export const getGetApiListSharesListListIdCollaboratorsQueryKey = (listId: numbe
     }
 
 
-export const getGetApiListSharesListListIdCollaboratorsQueryOptions = <TData = Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError = unknown>(listId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError, TData>>, fetch?: RequestInit}
+export const getGetApiListSharesListListIdCollaboratorsQueryOptions = <TData = Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError = Result>(listId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError, TData>>, fetch?: RequestInit}
 ) => {
 
 const {query: queryOptions, fetch: fetchOptions} = options ?? {};
@@ -1312,10 +1753,10 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetApiListSharesListListIdCollaboratorsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>>
-export type GetApiListSharesListListIdCollaboratorsQueryError = unknown
+export type GetApiListSharesListListIdCollaboratorsQueryError = Result
 
 
-export function useGetApiListSharesListListIdCollaborators<TData = Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError = unknown>(
+export function useGetApiListSharesListListIdCollaborators<TData = Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError = Result>(
  listId: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>,
@@ -1325,7 +1766,7 @@ export function useGetApiListSharesListListIdCollaborators<TData = Awaited<Retur
       >, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiListSharesListListIdCollaborators<TData = Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError = unknown>(
+export function useGetApiListSharesListListIdCollaborators<TData = Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError = Result>(
  listId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>,
@@ -1335,12 +1776,12 @@ export function useGetApiListSharesListListIdCollaborators<TData = Awaited<Retur
       >, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiListSharesListListIdCollaborators<TData = Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError = unknown>(
+export function useGetApiListSharesListListIdCollaborators<TData = Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError = Result>(
  listId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError, TData>>, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetApiListSharesListListIdCollaborators<TData = Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError = unknown>(
+export function useGetApiListSharesListListIdCollaborators<TData = Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError = Result>(
  listId: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiListSharesListListIdCollaborators>>, TError, TData>>, fetch?: RequestInit}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -1358,17 +1799,59 @@ export function useGetApiListSharesListListIdCollaborators<TData = Awaited<Retur
 
 
 
-export type deleteApiListSharesIdResponse200 = {
-  data: void
+export type deleteApiListSharesIdResponse200TextPlain = {
+  data: Result
   status: 200
 }
 
-export type deleteApiListSharesIdResponseSuccess = (deleteApiListSharesIdResponse200) & {
+export type deleteApiListSharesIdResponse200ApplicationJson = {
+  data: Result
+  status: 200
+}
+
+export type deleteApiListSharesIdResponse200TextJson = {
+  data: Result
+  status: 200
+}
+
+export type deleteApiListSharesIdResponse403TextPlain = {
+  data: Result
+  status: 403
+}
+
+export type deleteApiListSharesIdResponse403ApplicationJson = {
+  data: Result
+  status: 403
+}
+
+export type deleteApiListSharesIdResponse403TextJson = {
+  data: Result
+  status: 403
+}
+
+export type deleteApiListSharesIdResponse404TextPlain = {
+  data: Result
+  status: 404
+}
+
+export type deleteApiListSharesIdResponse404ApplicationJson = {
+  data: Result
+  status: 404
+}
+
+export type deleteApiListSharesIdResponse404TextJson = {
+  data: Result
+  status: 404
+}
+
+export type deleteApiListSharesIdResponseSuccess = (deleteApiListSharesIdResponse200TextPlain | deleteApiListSharesIdResponse200ApplicationJson | deleteApiListSharesIdResponse200TextJson) & {
   headers: Headers;
 };
-;
+export type deleteApiListSharesIdResponseError = (deleteApiListSharesIdResponse403TextPlain | deleteApiListSharesIdResponse403ApplicationJson | deleteApiListSharesIdResponse403TextJson | deleteApiListSharesIdResponse404TextPlain | deleteApiListSharesIdResponse404ApplicationJson | deleteApiListSharesIdResponse404TextJson) & {
+  headers: Headers;
+};
 
-export type deleteApiListSharesIdResponse = (deleteApiListSharesIdResponseSuccess)
+export type deleteApiListSharesIdResponse = (deleteApiListSharesIdResponseSuccess | deleteApiListSharesIdResponseError)
 
 export const getDeleteApiListSharesIdUrl = (id: number,) => {
 
@@ -1389,10 +1872,10 @@ export const deleteApiListSharesId = async (id: number, options?: RequestInit): 
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteApiListSharesIdResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: deleteApiListSharesIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as deleteApiListSharesIdResponse
 }
 
@@ -1400,7 +1883,7 @@ export const deleteApiListSharesId = async (id: number, options?: RequestInit): 
 
 
 
-export const getDeleteApiListSharesIdMutationOptions = <TError = unknown,
+export const getDeleteApiListSharesIdMutationOptions = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiListSharesId>>, TError,{id: number}, TContext>, fetch?: RequestInit}
 ): UseMutationOptions<Awaited<ReturnType<typeof deleteApiListSharesId>>, TError,{id: number}, TContext> => {
 
@@ -1429,9 +1912,9 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type DeleteApiListSharesIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiListSharesId>>>
 
-    export type DeleteApiListSharesIdMutationError = unknown
+    export type DeleteApiListSharesIdMutationError = Result
 
-    export const useDeleteApiListSharesId = <TError = unknown,
+    export const useDeleteApiListSharesId = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiListSharesId>>, TError,{id: number}, TContext>, fetch?: RequestInit}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof deleteApiListSharesId>>,
@@ -2402,12 +2885,22 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getDeleteApiShoppingListItemsIdMutationOptions(options), queryClient);
     }
 
-export type getApiShoppingListsResponse200 = {
-  data: void
+export type getApiShoppingListsResponse200TextPlain = {
+  data: ShoppingListIEnumerableResult
   status: 200
 }
 
-export type getApiShoppingListsResponseSuccess = (getApiShoppingListsResponse200) & {
+export type getApiShoppingListsResponse200ApplicationJson = {
+  data: ShoppingListIEnumerableResult
+  status: 200
+}
+
+export type getApiShoppingListsResponse200TextJson = {
+  data: ShoppingListIEnumerableResult
+  status: 200
+}
+
+export type getApiShoppingListsResponseSuccess = (getApiShoppingListsResponse200TextPlain | getApiShoppingListsResponse200ApplicationJson | getApiShoppingListsResponse200TextJson) & {
   headers: Headers;
 };
 ;
@@ -2433,10 +2926,10 @@ export const getApiShoppingLists = async ( options?: RequestInit): Promise<getAp
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: getApiShoppingListsResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: getApiShoppingListsResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as getApiShoppingListsResponse
 }
 
@@ -2516,12 +3009,22 @@ export function useGetApiShoppingLists<TData = Awaited<ReturnType<typeof getApiS
 
 
 
-export type postApiShoppingListsResponse200 = {
-  data: void
-  status: 200
+export type postApiShoppingListsResponse201TextPlain = {
+  data: ShoppingListResult
+  status: 201
 }
 
-export type postApiShoppingListsResponseSuccess = (postApiShoppingListsResponse200) & {
+export type postApiShoppingListsResponse201ApplicationJson = {
+  data: ShoppingListResult
+  status: 201
+}
+
+export type postApiShoppingListsResponse201TextJson = {
+  data: ShoppingListResult
+  status: 201
+}
+
+export type postApiShoppingListsResponseSuccess = (postApiShoppingListsResponse201TextPlain | postApiShoppingListsResponse201ApplicationJson | postApiShoppingListsResponse201TextJson) & {
   headers: Headers;
 };
 ;
@@ -2547,10 +3050,10 @@ export const postApiShoppingLists = async (shoppingList?: ShoppingList, options?
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: postApiShoppingListsResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: postApiShoppingListsResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as postApiShoppingListsResponse
 }
 
@@ -2600,17 +3103,59 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getPostApiShoppingListsMutationOptions(options), queryClient);
     }
 
-export type putApiShoppingListsResponse200 = {
-  data: void
+export type putApiShoppingListsResponse200TextPlain = {
+  data: Result
   status: 200
 }
 
-export type putApiShoppingListsResponseSuccess = (putApiShoppingListsResponse200) & {
+export type putApiShoppingListsResponse200ApplicationJson = {
+  data: Result
+  status: 200
+}
+
+export type putApiShoppingListsResponse200TextJson = {
+  data: Result
+  status: 200
+}
+
+export type putApiShoppingListsResponse403TextPlain = {
+  data: Result
+  status: 403
+}
+
+export type putApiShoppingListsResponse403ApplicationJson = {
+  data: Result
+  status: 403
+}
+
+export type putApiShoppingListsResponse403TextJson = {
+  data: Result
+  status: 403
+}
+
+export type putApiShoppingListsResponse404TextPlain = {
+  data: Result
+  status: 404
+}
+
+export type putApiShoppingListsResponse404ApplicationJson = {
+  data: Result
+  status: 404
+}
+
+export type putApiShoppingListsResponse404TextJson = {
+  data: Result
+  status: 404
+}
+
+export type putApiShoppingListsResponseSuccess = (putApiShoppingListsResponse200TextPlain | putApiShoppingListsResponse200ApplicationJson | putApiShoppingListsResponse200TextJson) & {
   headers: Headers;
 };
-;
+export type putApiShoppingListsResponseError = (putApiShoppingListsResponse403TextPlain | putApiShoppingListsResponse403ApplicationJson | putApiShoppingListsResponse403TextJson | putApiShoppingListsResponse404TextPlain | putApiShoppingListsResponse404ApplicationJson | putApiShoppingListsResponse404TextJson) & {
+  headers: Headers;
+};
 
-export type putApiShoppingListsResponse = (putApiShoppingListsResponseSuccess)
+export type putApiShoppingListsResponse = (putApiShoppingListsResponseSuccess | putApiShoppingListsResponseError)
 
 export const getPutApiShoppingListsUrl = () => {
 
@@ -2631,10 +3176,10 @@ export const putApiShoppingLists = async (shoppingList?: ShoppingList, options?:
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: putApiShoppingListsResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: putApiShoppingListsResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as putApiShoppingListsResponse
 }
 
@@ -2642,7 +3187,7 @@ export const putApiShoppingLists = async (shoppingList?: ShoppingList, options?:
 
 
 
-export const getPutApiShoppingListsMutationOptions = <TError = unknown,
+export const getPutApiShoppingListsMutationOptions = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiShoppingLists>>, TError,{data?: ShoppingList}, TContext>, fetch?: RequestInit}
 ): UseMutationOptions<Awaited<ReturnType<typeof putApiShoppingLists>>, TError,{data?: ShoppingList}, TContext> => {
 
@@ -2671,9 +3216,9 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type PutApiShoppingListsMutationResult = NonNullable<Awaited<ReturnType<typeof putApiShoppingLists>>>
     export type PutApiShoppingListsMutationBody = ShoppingList | undefined
-    export type PutApiShoppingListsMutationError = unknown
+    export type PutApiShoppingListsMutationError = Result
 
-    export const usePutApiShoppingLists = <TError = unknown,
+    export const usePutApiShoppingLists = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiShoppingLists>>, TError,{data?: ShoppingList}, TContext>, fetch?: RequestInit}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof putApiShoppingLists>>,
@@ -2684,17 +3229,59 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getPutApiShoppingListsMutationOptions(options), queryClient);
     }
 
-export type getApiShoppingListsIdResponse200 = {
-  data: void
+export type getApiShoppingListsIdResponse200TextPlain = {
+  data: ShoppingListResult
   status: 200
 }
 
-export type getApiShoppingListsIdResponseSuccess = (getApiShoppingListsIdResponse200) & {
+export type getApiShoppingListsIdResponse200ApplicationJson = {
+  data: ShoppingListResult
+  status: 200
+}
+
+export type getApiShoppingListsIdResponse200TextJson = {
+  data: ShoppingListResult
+  status: 200
+}
+
+export type getApiShoppingListsIdResponse403TextPlain = {
+  data: Result
+  status: 403
+}
+
+export type getApiShoppingListsIdResponse403ApplicationJson = {
+  data: Result
+  status: 403
+}
+
+export type getApiShoppingListsIdResponse403TextJson = {
+  data: Result
+  status: 403
+}
+
+export type getApiShoppingListsIdResponse404TextPlain = {
+  data: Result
+  status: 404
+}
+
+export type getApiShoppingListsIdResponse404ApplicationJson = {
+  data: Result
+  status: 404
+}
+
+export type getApiShoppingListsIdResponse404TextJson = {
+  data: Result
+  status: 404
+}
+
+export type getApiShoppingListsIdResponseSuccess = (getApiShoppingListsIdResponse200TextPlain | getApiShoppingListsIdResponse200ApplicationJson | getApiShoppingListsIdResponse200TextJson) & {
   headers: Headers;
 };
-;
+export type getApiShoppingListsIdResponseError = (getApiShoppingListsIdResponse403TextPlain | getApiShoppingListsIdResponse403ApplicationJson | getApiShoppingListsIdResponse403TextJson | getApiShoppingListsIdResponse404TextPlain | getApiShoppingListsIdResponse404ApplicationJson | getApiShoppingListsIdResponse404TextJson) & {
+  headers: Headers;
+};
 
-export type getApiShoppingListsIdResponse = (getApiShoppingListsIdResponseSuccess)
+export type getApiShoppingListsIdResponse = (getApiShoppingListsIdResponseSuccess | getApiShoppingListsIdResponseError)
 
 export const getGetApiShoppingListsIdUrl = (id: number,) => {
 
@@ -2715,10 +3302,10 @@ export const getApiShoppingListsId = async (id: number, options?: RequestInit): 
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: getApiShoppingListsIdResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: getApiShoppingListsIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as getApiShoppingListsIdResponse
 }
 
@@ -2733,7 +3320,7 @@ export const getGetApiShoppingListsIdQueryKey = (id: number,) => {
     }
 
 
-export const getGetApiShoppingListsIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiShoppingListsId>>, TError = unknown>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShoppingListsId>>, TError, TData>>, fetch?: RequestInit}
+export const getGetApiShoppingListsIdQueryOptions = <TData = Awaited<ReturnType<typeof getApiShoppingListsId>>, TError = Result>(id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShoppingListsId>>, TError, TData>>, fetch?: RequestInit}
 ) => {
 
 const {query: queryOptions, fetch: fetchOptions} = options ?? {};
@@ -2752,10 +3339,10 @@ const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 }
 
 export type GetApiShoppingListsIdQueryResult = NonNullable<Awaited<ReturnType<typeof getApiShoppingListsId>>>
-export type GetApiShoppingListsIdQueryError = unknown
+export type GetApiShoppingListsIdQueryError = Result
 
 
-export function useGetApiShoppingListsId<TData = Awaited<ReturnType<typeof getApiShoppingListsId>>, TError = unknown>(
+export function useGetApiShoppingListsId<TData = Awaited<ReturnType<typeof getApiShoppingListsId>>, TError = Result>(
  id: number, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShoppingListsId>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiShoppingListsId>>,
@@ -2765,7 +3352,7 @@ export function useGetApiShoppingListsId<TData = Awaited<ReturnType<typeof getAp
       >, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiShoppingListsId<TData = Awaited<ReturnType<typeof getApiShoppingListsId>>, TError = unknown>(
+export function useGetApiShoppingListsId<TData = Awaited<ReturnType<typeof getApiShoppingListsId>>, TError = Result>(
  id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShoppingListsId>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
           Awaited<ReturnType<typeof getApiShoppingListsId>>,
@@ -2775,12 +3362,12 @@ export function useGetApiShoppingListsId<TData = Awaited<ReturnType<typeof getAp
       >, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetApiShoppingListsId<TData = Awaited<ReturnType<typeof getApiShoppingListsId>>, TError = unknown>(
+export function useGetApiShoppingListsId<TData = Awaited<ReturnType<typeof getApiShoppingListsId>>, TError = Result>(
  id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShoppingListsId>>, TError, TData>>, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetApiShoppingListsId<TData = Awaited<ReturnType<typeof getApiShoppingListsId>>, TError = unknown>(
+export function useGetApiShoppingListsId<TData = Awaited<ReturnType<typeof getApiShoppingListsId>>, TError = Result>(
  id: number, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiShoppingListsId>>, TError, TData>>, fetch?: RequestInit}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
@@ -2798,17 +3385,59 @@ export function useGetApiShoppingListsId<TData = Awaited<ReturnType<typeof getAp
 
 
 
-export type deleteApiShoppingListsIdResponse200 = {
-  data: void
+export type deleteApiShoppingListsIdResponse200TextPlain = {
+  data: Result
   status: 200
 }
 
-export type deleteApiShoppingListsIdResponseSuccess = (deleteApiShoppingListsIdResponse200) & {
+export type deleteApiShoppingListsIdResponse200ApplicationJson = {
+  data: Result
+  status: 200
+}
+
+export type deleteApiShoppingListsIdResponse200TextJson = {
+  data: Result
+  status: 200
+}
+
+export type deleteApiShoppingListsIdResponse403TextPlain = {
+  data: Result
+  status: 403
+}
+
+export type deleteApiShoppingListsIdResponse403ApplicationJson = {
+  data: Result
+  status: 403
+}
+
+export type deleteApiShoppingListsIdResponse403TextJson = {
+  data: Result
+  status: 403
+}
+
+export type deleteApiShoppingListsIdResponse404TextPlain = {
+  data: Result
+  status: 404
+}
+
+export type deleteApiShoppingListsIdResponse404ApplicationJson = {
+  data: Result
+  status: 404
+}
+
+export type deleteApiShoppingListsIdResponse404TextJson = {
+  data: Result
+  status: 404
+}
+
+export type deleteApiShoppingListsIdResponseSuccess = (deleteApiShoppingListsIdResponse200TextPlain | deleteApiShoppingListsIdResponse200ApplicationJson | deleteApiShoppingListsIdResponse200TextJson) & {
   headers: Headers;
 };
-;
+export type deleteApiShoppingListsIdResponseError = (deleteApiShoppingListsIdResponse403TextPlain | deleteApiShoppingListsIdResponse403ApplicationJson | deleteApiShoppingListsIdResponse403TextJson | deleteApiShoppingListsIdResponse404TextPlain | deleteApiShoppingListsIdResponse404ApplicationJson | deleteApiShoppingListsIdResponse404TextJson) & {
+  headers: Headers;
+};
 
-export type deleteApiShoppingListsIdResponse = (deleteApiShoppingListsIdResponseSuccess)
+export type deleteApiShoppingListsIdResponse = (deleteApiShoppingListsIdResponseSuccess | deleteApiShoppingListsIdResponseError)
 
 export const getDeleteApiShoppingListsIdUrl = (id: number,) => {
 
@@ -2829,10 +3458,10 @@ export const deleteApiShoppingListsId = async (id: number, options?: RequestInit
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: deleteApiShoppingListsIdResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: deleteApiShoppingListsIdResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as deleteApiShoppingListsIdResponse
 }
 
@@ -2840,7 +3469,7 @@ export const deleteApiShoppingListsId = async (id: number, options?: RequestInit
 
 
 
-export const getDeleteApiShoppingListsIdMutationOptions = <TError = unknown,
+export const getDeleteApiShoppingListsIdMutationOptions = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiShoppingListsId>>, TError,{id: number}, TContext>, fetch?: RequestInit}
 ): UseMutationOptions<Awaited<ReturnType<typeof deleteApiShoppingListsId>>, TError,{id: number}, TContext> => {
 
@@ -2869,9 +3498,9 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type DeleteApiShoppingListsIdMutationResult = NonNullable<Awaited<ReturnType<typeof deleteApiShoppingListsId>>>
 
-    export type DeleteApiShoppingListsIdMutationError = unknown
+    export type DeleteApiShoppingListsIdMutationError = Result
 
-    export const useDeleteApiShoppingListsId = <TError = unknown,
+    export const useDeleteApiShoppingListsId = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof deleteApiShoppingListsId>>, TError,{id: number}, TContext>, fetch?: RequestInit}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof deleteApiShoppingListsId>>,
@@ -2882,17 +3511,59 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getDeleteApiShoppingListsIdMutationOptions(options), queryClient);
     }
 
-export type putApiShoppingListsIdDraftResponse200 = {
-  data: void
+export type putApiShoppingListsIdDraftResponse200TextPlain = {
+  data: Result
   status: 200
 }
 
-export type putApiShoppingListsIdDraftResponseSuccess = (putApiShoppingListsIdDraftResponse200) & {
+export type putApiShoppingListsIdDraftResponse200ApplicationJson = {
+  data: Result
+  status: 200
+}
+
+export type putApiShoppingListsIdDraftResponse200TextJson = {
+  data: Result
+  status: 200
+}
+
+export type putApiShoppingListsIdDraftResponse403TextPlain = {
+  data: Result
+  status: 403
+}
+
+export type putApiShoppingListsIdDraftResponse403ApplicationJson = {
+  data: Result
+  status: 403
+}
+
+export type putApiShoppingListsIdDraftResponse403TextJson = {
+  data: Result
+  status: 403
+}
+
+export type putApiShoppingListsIdDraftResponse404TextPlain = {
+  data: Result
+  status: 404
+}
+
+export type putApiShoppingListsIdDraftResponse404ApplicationJson = {
+  data: Result
+  status: 404
+}
+
+export type putApiShoppingListsIdDraftResponse404TextJson = {
+  data: Result
+  status: 404
+}
+
+export type putApiShoppingListsIdDraftResponseSuccess = (putApiShoppingListsIdDraftResponse200TextPlain | putApiShoppingListsIdDraftResponse200ApplicationJson | putApiShoppingListsIdDraftResponse200TextJson) & {
   headers: Headers;
 };
-;
+export type putApiShoppingListsIdDraftResponseError = (putApiShoppingListsIdDraftResponse403TextPlain | putApiShoppingListsIdDraftResponse403ApplicationJson | putApiShoppingListsIdDraftResponse403TextJson | putApiShoppingListsIdDraftResponse404TextPlain | putApiShoppingListsIdDraftResponse404ApplicationJson | putApiShoppingListsIdDraftResponse404TextJson) & {
+  headers: Headers;
+};
 
-export type putApiShoppingListsIdDraftResponse = (putApiShoppingListsIdDraftResponseSuccess)
+export type putApiShoppingListsIdDraftResponse = (putApiShoppingListsIdDraftResponseSuccess | putApiShoppingListsIdDraftResponseError)
 
 export const getPutApiShoppingListsIdDraftUrl = (id: number,) => {
 
@@ -2913,10 +3584,10 @@ export const putApiShoppingListsIdDraft = async (id: number, options?: RequestIn
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: putApiShoppingListsIdDraftResponse['data'] = body ? JSON.parse(body) : undefined
+  const data: putApiShoppingListsIdDraftResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
   return { data, status: res.status, headers: res.headers } as putApiShoppingListsIdDraftResponse
 }
 
@@ -2924,7 +3595,7 @@ export const putApiShoppingListsIdDraft = async (id: number, options?: RequestIn
 
 
 
-export const getPutApiShoppingListsIdDraftMutationOptions = <TError = unknown,
+export const getPutApiShoppingListsIdDraftMutationOptions = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiShoppingListsIdDraft>>, TError,{id: number}, TContext>, fetch?: RequestInit}
 ): UseMutationOptions<Awaited<ReturnType<typeof putApiShoppingListsIdDraft>>, TError,{id: number}, TContext> => {
 
@@ -2953,9 +3624,9 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
 
     export type PutApiShoppingListsIdDraftMutationResult = NonNullable<Awaited<ReturnType<typeof putApiShoppingListsIdDraft>>>
 
-    export type PutApiShoppingListsIdDraftMutationError = unknown
+    export type PutApiShoppingListsIdDraftMutationError = Result
 
-    export const usePutApiShoppingListsIdDraft = <TError = unknown,
+    export const usePutApiShoppingListsIdDraft = <TError = Result,
     TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof putApiShoppingListsIdDraft>>, TError,{id: number}, TContext>, fetch?: RequestInit}
  , queryClient?: QueryClient): UseMutationResult<
         Awaited<ReturnType<typeof putApiShoppingListsIdDraft>>,
@@ -2966,36 +3637,39 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getPutApiShoppingListsIdDraftMutationOptions(options), queryClient);
     }
 
-export type getDraftsResponse200 = {
-  data: void
+export type getApiDraftsResponse200TextPlain = {
+  data: ShoppingListIEnumerableResult
   status: 200
 }
 
-export type getDraftsResponseSuccess = (getDraftsResponse200) & {
+export type getApiDraftsResponse200ApplicationJson = {
+  data: ShoppingListIEnumerableResult
+  status: 200
+}
+
+export type getApiDraftsResponse200TextJson = {
+  data: ShoppingListIEnumerableResult
+  status: 200
+}
+
+export type getApiDraftsResponseSuccess = (getApiDraftsResponse200TextPlain | getApiDraftsResponse200ApplicationJson | getApiDraftsResponse200TextJson) & {
   headers: Headers;
 };
 ;
 
-export type getDraftsResponse = (getDraftsResponseSuccess)
+export type getApiDraftsResponse = (getApiDraftsResponseSuccess)
 
-export const getGetDraftsUrl = (params?: GetDraftsParams,) => {
-  const normalizedParams = new URLSearchParams();
+export const getGetApiDraftsUrl = () => {
 
-  Object.entries(params || {}).forEach(([key, value]) => {
 
-    if (value !== undefined) {
-      normalizedParams.append(key, value === null ? 'null' : String(value))
-    }
-  });
 
-  const stringifiedParams = normalizedParams.toString();
 
-  return stringifiedParams.length > 0 ? `/drafts?${stringifiedParams}` : `/drafts`
+  return `/api/drafts`
 }
 
-export const getDrafts = async (params?: GetDraftsParams, options?: RequestInit): Promise<getDraftsResponse> => {
+export const getApiDrafts = async ( options?: RequestInit): Promise<getApiDraftsResponse> => {
 
-  const res = await fetch(getGetDraftsUrl(params),
+  const res = await fetch(getGetApiDraftsUrl(),
   {
     ...options,
     method: 'GET'
@@ -3004,77 +3678,77 @@ export const getDrafts = async (params?: GetDraftsParams, options?: RequestInit)
   }
 )
 
-
+  const contentType = (res.headers.get('content-type') ?? '').toLowerCase();
   const body = [204, 205, 304].includes(res.status) ? null : await res.text();
 
-  const data: getDraftsResponse['data'] = body ? JSON.parse(body) : undefined
-  return { data, status: res.status, headers: res.headers } as getDraftsResponse
+  const data: getApiDraftsResponse['data'] = body ? (contentType.includes('json') ? JSON.parse(body) : body) : {}
+  return { data, status: res.status, headers: res.headers } as getApiDraftsResponse
 }
 
 
 
 
 
-export const getGetDraftsQueryKey = (params?: GetDraftsParams,) => {
+export const getGetApiDraftsQueryKey = () => {
     return [
-    `/drafts`, ...(params ? [params] : [])
+    `/api/drafts`
     ] as const;
     }
 
 
-export const getGetDraftsQueryOptions = <TData = Awaited<ReturnType<typeof getDrafts>>, TError = unknown>(params?: GetDraftsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDrafts>>, TError, TData>>, fetch?: RequestInit}
+export const getGetApiDraftsQueryOptions = <TData = Awaited<ReturnType<typeof getApiDrafts>>, TError = unknown>( options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDrafts>>, TError, TData>>, fetch?: RequestInit}
 ) => {
 
 const {query: queryOptions, fetch: fetchOptions} = options ?? {};
 
-  const queryKey =  queryOptions?.queryKey ?? getGetDraftsQueryKey(params);
+  const queryKey =  queryOptions?.queryKey ?? getGetApiDraftsQueryKey();
 
 
 
-    const queryFn: QueryFunction<Awaited<ReturnType<typeof getDrafts>>> = ({ signal }) => getDrafts(params, { signal, ...fetchOptions });
+    const queryFn: QueryFunction<Awaited<ReturnType<typeof getApiDrafts>>> = ({ signal }) => getApiDrafts({ signal, ...fetchOptions });
 
 
 
 
 
-   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getDrafts>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
+   return  { queryKey, queryFn, ...queryOptions} as UseQueryOptions<Awaited<ReturnType<typeof getApiDrafts>>, TError, TData> & { queryKey: DataTag<QueryKey, TData, TError> }
 }
 
-export type GetDraftsQueryResult = NonNullable<Awaited<ReturnType<typeof getDrafts>>>
-export type GetDraftsQueryError = unknown
+export type GetApiDraftsQueryResult = NonNullable<Awaited<ReturnType<typeof getApiDrafts>>>
+export type GetApiDraftsQueryError = unknown
 
 
-export function useGetDrafts<TData = Awaited<ReturnType<typeof getDrafts>>, TError = unknown>(
- params: undefined |  GetDraftsParams, options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDrafts>>, TError, TData>> & Pick<
+export function useGetApiDrafts<TData = Awaited<ReturnType<typeof getApiDrafts>>, TError = unknown>(
+  options: { query:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDrafts>>, TError, TData>> & Pick<
         DefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getDrafts>>,
+          Awaited<ReturnType<typeof getApiDrafts>>,
           TError,
-          Awaited<ReturnType<typeof getDrafts>>
+          Awaited<ReturnType<typeof getApiDrafts>>
         > , 'initialData'
       >, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  DefinedUseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetDrafts<TData = Awaited<ReturnType<typeof getDrafts>>, TError = unknown>(
- params?: GetDraftsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDrafts>>, TError, TData>> & Pick<
+export function useGetApiDrafts<TData = Awaited<ReturnType<typeof getApiDrafts>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDrafts>>, TError, TData>> & Pick<
         UndefinedInitialDataOptions<
-          Awaited<ReturnType<typeof getDrafts>>,
+          Awaited<ReturnType<typeof getApiDrafts>>,
           TError,
-          Awaited<ReturnType<typeof getDrafts>>
+          Awaited<ReturnType<typeof getApiDrafts>>
         > , 'initialData'
       >, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
-export function useGetDrafts<TData = Awaited<ReturnType<typeof getDrafts>>, TError = unknown>(
- params?: GetDraftsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDrafts>>, TError, TData>>, fetch?: RequestInit}
+export function useGetApiDrafts<TData = Awaited<ReturnType<typeof getApiDrafts>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDrafts>>, TError, TData>>, fetch?: RequestInit}
  , queryClient?: QueryClient
   ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> }
 
-export function useGetDrafts<TData = Awaited<ReturnType<typeof getDrafts>>, TError = unknown>(
- params?: GetDraftsParams, options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getDrafts>>, TError, TData>>, fetch?: RequestInit}
+export function useGetApiDrafts<TData = Awaited<ReturnType<typeof getApiDrafts>>, TError = unknown>(
+  options?: { query?:Partial<UseQueryOptions<Awaited<ReturnType<typeof getApiDrafts>>, TError, TData>>, fetch?: RequestInit}
  , queryClient?: QueryClient
  ):  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> } {
 
-  const queryOptions = getGetDraftsQueryOptions(params,options)
+  const queryOptions = getGetApiDraftsQueryOptions(options)
 
   const query = useQuery(queryOptions, queryClient) as  UseQueryResult<TData, TError> & { queryKey: DataTag<QueryKey, TData, TError> };
 

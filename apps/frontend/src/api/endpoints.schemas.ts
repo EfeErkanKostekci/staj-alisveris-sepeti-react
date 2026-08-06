@@ -20,6 +20,43 @@ export interface Advertisement {
   imageUrl?: string | null;
 }
 
+export interface AuthResponseDto {
+  requiresOtp?: boolean;
+  /** @nullable */
+  email?: string | null;
+}
+
+export interface AuthResponseDtoResult {
+  isSuccess?: boolean;
+  /** @nullable */
+  message?: string | null;
+  data?: AuthResponseDto;
+}
+
+export interface CollaboratorResponseDto {
+  id?: number;
+  /** @nullable */
+  role?: string | null;
+  /** @nullable */
+  status?: string | null;
+  /** @nullable */
+  inviteeId?: number | null;
+  /** @nullable */
+  inviteeEmail?: string | null;
+  /** @nullable */
+  inviteeName?: string | null;
+  /** @nullable */
+  profilePictureUrl?: string | null;
+}
+
+export interface CollaboratorResponseDtoIEnumerableResult {
+  isSuccess?: boolean;
+  /** @nullable */
+  message?: string | null;
+  /** @nullable */
+  data?: CollaboratorResponseDto[] | null;
+}
+
 export interface ForgotPasswordDto {
   /** @nullable */
   email?: string | null;
@@ -33,11 +70,46 @@ export interface InviteDto {
   role?: string | null;
 }
 
+export interface InviteResponseDto {
+  id?: number;
+}
+
+export interface InviteResponseDtoResult {
+  isSuccess?: boolean;
+  /** @nullable */
+  message?: string | null;
+  data?: InviteResponseDto;
+}
+
 export interface LoginDto {
   /** @nullable */
   email?: string | null;
   /** @nullable */
   password?: string | null;
+}
+
+export interface MyInvitesResponseDto {
+  id?: number;
+  /** @nullable */
+  role?: string | null;
+  /** @nullable */
+  status?: string | null;
+  /** @nullable */
+  listTitle?: string | null;
+  /** @nullable */
+  inviterName?: string | null;
+  /** @nullable */
+  inviterEmail?: string | null;
+  /** @nullable */
+  profilePictureUrl?: string | null;
+}
+
+export interface MyInvitesResponseDtoIEnumerableResult {
+  isSuccess?: boolean;
+  /** @nullable */
+  message?: string | null;
+  /** @nullable */
+  data?: MyInvitesResponseDto[] | null;
 }
 
 export interface Role {
@@ -133,6 +205,24 @@ export interface RegisterDto {
   password?: string | null;
 }
 
+export interface RegisterResponseDto {
+  userId?: number;
+}
+
+export interface RegisterResponseDtoResult {
+  isSuccess?: boolean;
+  /** @nullable */
+  message?: string | null;
+  data?: RegisterResponseDto;
+}
+
+export interface ResendOtpDto {
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  operation?: string | null;
+}
+
 export interface ResetPasswordDto {
   /** @nullable */
   email?: string | null;
@@ -142,16 +232,57 @@ export interface ResetPasswordDto {
   newPassword?: string | null;
 }
 
+export interface Result {
+  isSuccess?: boolean;
+  /** @nullable */
+  message?: string | null;
+}
+
+export interface ShoppingListIEnumerableResult {
+  isSuccess?: boolean;
+  /** @nullable */
+  message?: string | null;
+  /** @nullable */
+  data?: ShoppingList[] | null;
+}
+
+export interface ShoppingListResult {
+  isSuccess?: boolean;
+  /** @nullable */
+  message?: string | null;
+  data?: ShoppingList;
+}
+
+export interface TokenResponseDto {
+  /** @nullable */
+  token?: string | null;
+  expiration?: string;
+  userId?: number;
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  name?: string | null;
+  /** @nullable */
+  lastName?: string | null;
+  /** @nullable */
+  profilePictureUrl?: string | null;
+  /** @nullable */
+  role?: string | null;
+}
+
+export interface TokenResponseDtoResult {
+  isSuccess?: boolean;
+  /** @nullable */
+  message?: string | null;
+  data?: TokenResponseDto;
+}
+
 export interface VerifyOtpDto {
   /** @nullable */
   email?: string | null;
   /** @nullable */
   otp?: string | null;
 }
-
-export type GetDraftsParams = {
-id?: number;
-};
 
 export type PostApiUsersUploadProfilePictureBody = {
   file?: Blob;
