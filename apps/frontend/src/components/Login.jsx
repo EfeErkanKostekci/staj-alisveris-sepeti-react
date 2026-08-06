@@ -11,6 +11,7 @@ import {
   usePostApiAuthVerifyRegister,
   usePostApiAuthForgotPassword,
   usePostApiAuthResetPassword,
+  usePostApiAuthResendOtp,
 } from '../api/endpoints';
 
 export default function Login({ onLoginSuccess }) {
@@ -40,6 +41,7 @@ export default function Login({ onLoginSuccess }) {
   
   const forgotPasswordMutation = usePostApiAuthForgotPassword();
   const resetPasswordMutation = usePostApiAuthResetPassword();
+  const resendOtpMutation = usePostApiAuthResendOtp();
 
   // Ekran değiştiğinde veya Geri dönüldüğünde formu sıfırlar
   const resetForm = () => {
@@ -146,11 +148,25 @@ export default function Login({ onLoginSuccess }) {
     }
   };
 
+  const handleResendOtp = () => {
+    setErrorMsg('');
+    setSuccessMsg('');
+    resendOtpMutation.mutate(
+      { data: { email } },
+      {
+        onSuccess: () => {
+          setSuccessMsg('Yeni doğrulama kodu e-postanıza gönderildi.');
+        },
+        onError: (err) => setErrorMsg('Kod gönderilemedi: ' + err.message)
+      }
+    );
+  };
+
   // Herhangi bir API isteği atılırken yükleme durumunu takip etmek için
   const isPending = 
     loginMutation.isPending || verifyLoginMutation.isPending ||
     registerMutation.isPending || verifyRegisterMutation.isPending ||
-    forgotPasswordMutation.isPending || resetPasswordMutation.isPending;
+    forgotPasswordMutation.isPending || resetPasswordMutation.isPending || resendOtpMutation.isPending;
 
   return (
     <div className="login-container">
@@ -260,6 +276,15 @@ export default function Login({ onLoginSuccess }) {
 
             <button type="submit" className="login-btn" disabled={isPending}>
               {isPending ? <span className="spinner"></span> : 'Doğrula ve Tamamla'}
+            </button>
+            
+            <button 
+              type="button" 
+              onClick={handleResendOtp}
+              disabled={resendOtpMutation.isPending}
+              style={{ marginTop: '10px', background: 'transparent', border: 'none', color: '#7F56D9', cursor: 'pointer', width: '100%', fontWeight: '500' }}
+            >
+              {resendOtpMutation.isPending ? 'Gönderiliyor...' : 'Kodu Tekrar Gönder'}
             </button>
             
             <button 
