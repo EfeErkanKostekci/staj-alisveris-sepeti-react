@@ -34,6 +34,7 @@ import {
   postApiShoppingListItems,
   putApiShoppingListItems,
   deleteApiShoppingListItemsId,
+  useDeleteApiUsersId,
 } from './api/endpoints';
 
 export default function App() {
@@ -131,6 +132,25 @@ export default function App() {
     setInvites([]);
   };
 
+  const handleDeleteAccount = () => {
+    if (window.confirm('Hesabınızı silmek istediğinize emin misiniz? Bu işlem geri alınamaz!')) {
+      const userId = Number(localStorage.getItem('userId'));
+      
+      deleteAccountMutation.mutate(
+        { id: userId },
+        {
+          onSuccess: () => {
+            alert('Hesabınız başarıyla silindi.');
+            handleLogout(); // Silindikten sonra çıkış yaptır ve logine at
+          },
+          onError: (err) => {
+            alert('Hesap silinirken bir hata oluştu: ' + err.message);
+          }
+        }
+      );
+    }
+  };
+
   const handleProfilePicUpload = async (file) => {
     try {
       // 1. Resim dosyasını API'ye (C#'a) gönderebilmek için FormData kalıbına sokuyoruz
@@ -164,13 +184,18 @@ export default function App() {
 
   // 2. Yeni liste ve eleman işlemleri için mutation'ları tanımlıyoruz
   const t = localStorage.getItem('token');
-  const fetchOpts = { headers: { Authorization: `Bearer ${t}` } };
+    const fetchOpts = {
+    get headers() {
+      return { Authorization: `Bearer ${localStorage.getItem('token')}` };
+    }
+  };
 
   const createListMutation = usePostApiShoppingLists({ fetch: fetchOpts });
   const updateListMutation = usePutApiShoppingLists({ fetch: fetchOpts }); // Liste güncellemeleri için
   const deleteListMutation = useDeleteApiShoppingListsId({ fetch: fetchOpts });
   const toggleItemMutation = usePutApiShoppingListItems({ fetch: fetchOpts });
   const deleteItemMutation = useDeleteApiShoppingListItemsId({ fetch: fetchOpts });
+  const deleteAccountMutation = useDeleteApiUsersId({ fetch: fetchOpts });
 
   // API'den dönen verinin harf formatını (casing) dinamik tespit eden yardımcı
   const listDataForCasing = response?.data?.data ? response.data.data : response?.data;
@@ -207,6 +232,7 @@ export default function App() {
         const isOwner = listUserId === currentUserId;
         const isShared = list.isShared ?? list.IsShared ?? false;
         const isDraft = list.isDraft ?? list.isDraft ?? false;
+        const isDeleted = list.isDeleted ?? list.IsDeleted ?? false;
         const itemsList = list.shoppingListItems ?? list.ShoppingListItems ?? [];
         const currentUserRole = list.currentUserRole ?? list.CurrentUserRole ?? 'Owner';
         const canEdit = currentUserRole === 'Edit' || currentUserRole === 'Owner';
@@ -608,6 +634,7 @@ export default function App() {
           profilePictureUrl={profilePictureUrl}
           onProfilePicUpload={handleProfilePicUpload}
           onLogout={handleLogout}
+          onDeleteAccount={handleDeleteAccount} 
           onBellClick={() => setIsNotifOpen((v) => !v)}
           onAwardClick={() => setIsAdsOpen(true)}
           inviteCount={invites.length}

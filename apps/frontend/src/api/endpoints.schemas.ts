@@ -20,6 +20,11 @@ export interface Advertisement {
   imageUrl?: string | null;
 }
 
+export interface ForgotPasswordDto {
+  /** @nullable */
+  email?: string | null;
+}
+
 export interface InviteDto {
   listId?: number;
   /** @nullable */
@@ -126,6 +131,22 @@ export interface RegisterDto {
   email?: string | null;
   /** @nullable */
   password?: string | null;
+}
+
+export interface ResetPasswordDto {
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  otp?: string | null;
+  /** @nullable */
+  newPassword?: string | null;
+}
+
+export interface VerifyOtpDto {
+  /** @nullable */
+  email?: string | null;
+  /** @nullable */
+  otp?: string | null;
 }
 
 export type GetDraftsParams = {
