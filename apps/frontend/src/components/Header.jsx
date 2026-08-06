@@ -17,6 +17,7 @@ export default function Header({
   inviteCount = 0,
   profilePictureUrl,
   onProfilePicUpload,
+  onDeleteAccount,
 }) {
   // Kullanıcının ad ve soyadının baş harflerini alıp dairesel avatar içinde gösteriyoruz
   const getInitials = (name) => {
@@ -112,9 +113,9 @@ export default function Header({
           {showDropdown && onLogout && (
             <div
               className="user-dropdown"
-              onClick={(e) => e.stopPropagation()} // Butona basınca dropdown'un kapanmasını engeller
-              onMouseEnter={() => clearTimeout(dropdownTimeoutRef.current)} // Üstüne gelince kapanmayı durdur
-              onMouseLeave={handleUserInfoClick} // Üzerinden fare çekilince tekrar 3 saniye saymaya başla
+              onClick={(e) => e.stopPropagation()} 
+              onMouseEnter={() => clearTimeout(dropdownTimeoutRef.current)} 
+              onMouseLeave={handleUserInfoClick} 
               style={{
                 position: 'absolute',
                 top: '100%',
@@ -127,29 +128,61 @@ export default function Header({
                 padding: '8px',
                 zIndex: 100,
                 display: 'flex',
-                alignItems: 'center',
-                gap: '8px',
-                cursor: 'pointer',
+                flexDirection: 'column', // Öğeleri alt alta dizer
+                gap: '0px',
               }}
-              onClickCapture={onLogout} // onClickCapture kullanarak onLogout tetiklenmesini garanti ediyoruz
             >
-              <svg
-                width="16"
-                height="16"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="#f04438"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
+              {/* SADECE ÇIKIŞ YAP KISMI */}
+              <div 
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  cursor: 'pointer',
+                  padding: '4px 0'
+                }}
+                onClickCapture={onLogout} // <-- SADECE KENDİ DİVİNDE!
               >
-                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
-                <polyline points="16 17 21 12 16 7" />
-                <line x1="21" y1="12" x2="9" y2="12" />
-              </svg>
-              <span style={{ color: '#f04438', fontSize: '14px', fontWeight: '500' }}>
-                Çıkış Yap
-              </span>
+                <svg
+                  width="16"
+                  height="16"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="#f04438"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                >
+                  <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                  <polyline points="16 17 21 12 16 7" />
+                  <line x1="21" y1="12" x2="9" y2="12" />
+                </svg>
+                <span style={{ color: '#f04438', fontSize: '14px', fontWeight: '500' }}>
+                  Çıkış Yap
+                </span>
+              </div>
+               {/* SADECE HESABIMI SİL KISMI */}
+              <div
+                className="user-dropdown-item"
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  cursor: 'pointer',
+                  marginTop: '4px',
+                  paddingTop: '8px',
+                  borderTop: '1px solid #f0f0f0'
+                }}
+                onClickCapture={onDeleteAccount} // <-- SADECE KENDİ DİVİNDE!
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#f04438" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+                <span style={{ color: '#f04438', fontSize: '14px', fontWeight: '500' }}>
+                  Hesabımı Sil
+                </span>
+              </div>
             </div>
           )}
         </div>

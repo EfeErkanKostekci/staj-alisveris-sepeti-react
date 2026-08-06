@@ -25,15 +25,18 @@ import type {
 
 import type {
   Advertisement,
+  ForgotPasswordDto,
   GetDraftsParams,
   InviteDto,
   LoginDto,
   PostApiUsersUploadProfilePictureBody,
   Product,
   RegisterDto,
+  ResetPasswordDto,
   ShoppingList,
   ShoppingListItem,
-  User
+  User,
+  VerifyOtpDto
 } from './endpoints.schemas';
 
 
@@ -455,6 +458,90 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
       return useMutation(getPostApiAuthRegisterMutationOptions(options), queryClient);
     }
 
+export type postApiAuthVerifyRegisterResponse200 = {
+  data: void
+  status: 200
+}
+
+export type postApiAuthVerifyRegisterResponseSuccess = (postApiAuthVerifyRegisterResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiAuthVerifyRegisterResponse = (postApiAuthVerifyRegisterResponseSuccess)
+
+export const getPostApiAuthVerifyRegisterUrl = () => {
+
+
+
+
+  return `/api/Auth/verify-register`
+}
+
+export const postApiAuthVerifyRegister = async (verifyOtpDto?: VerifyOtpDto, options?: RequestInit): Promise<postApiAuthVerifyRegisterResponse> => {
+
+  const res = await fetch(getPostApiAuthVerifyRegisterUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(verifyOtpDto)
+  }
+)
+
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: postApiAuthVerifyRegisterResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as postApiAuthVerifyRegisterResponse
+}
+
+
+
+
+
+export const getPostApiAuthVerifyRegisterMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyRegister>>, TError,{data?: VerifyOtpDto}, TContext>, fetch?: RequestInit}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyRegister>>, TError,{data?: VerifyOtpDto}, TContext> => {
+
+const mutationKey = ['postApiAuthVerifyRegister'];
+const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, fetch: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthVerifyRegister>>, {data?: VerifyOtpDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAuthVerifyRegister(data,fetchOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAuthVerifyRegisterMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthVerifyRegister>>>
+    export type PostApiAuthVerifyRegisterMutationBody = VerifyOtpDto | undefined
+    export type PostApiAuthVerifyRegisterMutationError = unknown
+
+    export const usePostApiAuthVerifyRegister = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyRegister>>, TError,{data?: VerifyOtpDto}, TContext>, fetch?: RequestInit}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAuthVerifyRegister>>,
+        TError,
+        {data?: VerifyOtpDto},
+        TContext
+      > => {
+      return useMutation(getPostApiAuthVerifyRegisterMutationOptions(options), queryClient);
+    }
+
 export type postApiAuthLoginResponse200 = {
   data: void
   status: 200
@@ -537,6 +624,258 @@ const {mutation: mutationOptions, fetch: fetchOptions} = options ?
         TContext
       > => {
       return useMutation(getPostApiAuthLoginMutationOptions(options), queryClient);
+    }
+
+export type postApiAuthVerifyLoginResponse200 = {
+  data: void
+  status: 200
+}
+
+export type postApiAuthVerifyLoginResponseSuccess = (postApiAuthVerifyLoginResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiAuthVerifyLoginResponse = (postApiAuthVerifyLoginResponseSuccess)
+
+export const getPostApiAuthVerifyLoginUrl = () => {
+
+
+
+
+  return `/api/Auth/verify-login`
+}
+
+export const postApiAuthVerifyLogin = async (verifyOtpDto?: VerifyOtpDto, options?: RequestInit): Promise<postApiAuthVerifyLoginResponse> => {
+
+  const res = await fetch(getPostApiAuthVerifyLoginUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(verifyOtpDto)
+  }
+)
+
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: postApiAuthVerifyLoginResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as postApiAuthVerifyLoginResponse
+}
+
+
+
+
+
+export const getPostApiAuthVerifyLoginMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyLogin>>, TError,{data?: VerifyOtpDto}, TContext>, fetch?: RequestInit}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyLogin>>, TError,{data?: VerifyOtpDto}, TContext> => {
+
+const mutationKey = ['postApiAuthVerifyLogin'];
+const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, fetch: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthVerifyLogin>>, {data?: VerifyOtpDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAuthVerifyLogin(data,fetchOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAuthVerifyLoginMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthVerifyLogin>>>
+    export type PostApiAuthVerifyLoginMutationBody = VerifyOtpDto | undefined
+    export type PostApiAuthVerifyLoginMutationError = unknown
+
+    export const usePostApiAuthVerifyLogin = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthVerifyLogin>>, TError,{data?: VerifyOtpDto}, TContext>, fetch?: RequestInit}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAuthVerifyLogin>>,
+        TError,
+        {data?: VerifyOtpDto},
+        TContext
+      > => {
+      return useMutation(getPostApiAuthVerifyLoginMutationOptions(options), queryClient);
+    }
+
+export type postApiAuthForgotPasswordResponse200 = {
+  data: void
+  status: 200
+}
+
+export type postApiAuthForgotPasswordResponseSuccess = (postApiAuthForgotPasswordResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiAuthForgotPasswordResponse = (postApiAuthForgotPasswordResponseSuccess)
+
+export const getPostApiAuthForgotPasswordUrl = () => {
+
+
+
+
+  return `/api/Auth/forgot-password`
+}
+
+export const postApiAuthForgotPassword = async (forgotPasswordDto?: ForgotPasswordDto, options?: RequestInit): Promise<postApiAuthForgotPasswordResponse> => {
+
+  const res = await fetch(getPostApiAuthForgotPasswordUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(forgotPasswordDto)
+  }
+)
+
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: postApiAuthForgotPasswordResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as postApiAuthForgotPasswordResponse
+}
+
+
+
+
+
+export const getPostApiAuthForgotPasswordMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthForgotPassword>>, TError,{data?: ForgotPasswordDto}, TContext>, fetch?: RequestInit}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthForgotPassword>>, TError,{data?: ForgotPasswordDto}, TContext> => {
+
+const mutationKey = ['postApiAuthForgotPassword'];
+const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, fetch: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthForgotPassword>>, {data?: ForgotPasswordDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAuthForgotPassword(data,fetchOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAuthForgotPasswordMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthForgotPassword>>>
+    export type PostApiAuthForgotPasswordMutationBody = ForgotPasswordDto | undefined
+    export type PostApiAuthForgotPasswordMutationError = unknown
+
+    export const usePostApiAuthForgotPassword = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthForgotPassword>>, TError,{data?: ForgotPasswordDto}, TContext>, fetch?: RequestInit}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAuthForgotPassword>>,
+        TError,
+        {data?: ForgotPasswordDto},
+        TContext
+      > => {
+      return useMutation(getPostApiAuthForgotPasswordMutationOptions(options), queryClient);
+    }
+
+export type postApiAuthResetPasswordResponse200 = {
+  data: void
+  status: 200
+}
+
+export type postApiAuthResetPasswordResponseSuccess = (postApiAuthResetPasswordResponse200) & {
+  headers: Headers;
+};
+;
+
+export type postApiAuthResetPasswordResponse = (postApiAuthResetPasswordResponseSuccess)
+
+export const getPostApiAuthResetPasswordUrl = () => {
+
+
+
+
+  return `/api/Auth/reset-password`
+}
+
+export const postApiAuthResetPassword = async (resetPasswordDto?: ResetPasswordDto, options?: RequestInit): Promise<postApiAuthResetPasswordResponse> => {
+
+  const res = await fetch(getPostApiAuthResetPasswordUrl(),
+  {
+    ...options,
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', ...options?.headers },
+    body: JSON.stringify(resetPasswordDto)
+  }
+)
+
+
+  const body = [204, 205, 304].includes(res.status) ? null : await res.text();
+
+  const data: postApiAuthResetPasswordResponse['data'] = body ? JSON.parse(body) : undefined
+  return { data, status: res.status, headers: res.headers } as postApiAuthResetPasswordResponse
+}
+
+
+
+
+
+export const getPostApiAuthResetPasswordMutationOptions = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthResetPassword>>, TError,{data?: ResetPasswordDto}, TContext>, fetch?: RequestInit}
+): UseMutationOptions<Awaited<ReturnType<typeof postApiAuthResetPassword>>, TError,{data?: ResetPasswordDto}, TContext> => {
+
+const mutationKey = ['postApiAuthResetPassword'];
+const {mutation: mutationOptions, fetch: fetchOptions} = options ?
+      options.mutation && 'mutationKey' in options.mutation && options.mutation.mutationKey ?
+      options
+      : {...options, mutation: {...options.mutation, mutationKey}}
+      : {mutation: { mutationKey, }, fetch: undefined};
+
+
+
+
+      const mutationFn: MutationFunction<Awaited<ReturnType<typeof postApiAuthResetPassword>>, {data?: ResetPasswordDto}> = (props) => {
+          const {data} = props ?? {};
+
+          return  postApiAuthResetPassword(data,fetchOptions)
+        }
+
+
+
+
+
+
+  return  { mutationFn, ...mutationOptions }}
+
+    export type PostApiAuthResetPasswordMutationResult = NonNullable<Awaited<ReturnType<typeof postApiAuthResetPassword>>>
+    export type PostApiAuthResetPasswordMutationBody = ResetPasswordDto | undefined
+    export type PostApiAuthResetPasswordMutationError = unknown
+
+    export const usePostApiAuthResetPassword = <TError = unknown,
+    TContext = unknown>(options?: { mutation?:UseMutationOptions<Awaited<ReturnType<typeof postApiAuthResetPassword>>, TError,{data?: ResetPasswordDto}, TContext>, fetch?: RequestInit}
+ , queryClient?: QueryClient): UseMutationResult<
+        Awaited<ReturnType<typeof postApiAuthResetPassword>>,
+        TError,
+        {data?: ResetPasswordDto},
+        TContext
+      > => {
+      return useMutation(getPostApiAuthResetPasswordMutationOptions(options), queryClient);
     }
 
 export type postApiListSharesInviteResponse200 = {
