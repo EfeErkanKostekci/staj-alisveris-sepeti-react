@@ -7,7 +7,8 @@ export default function App() {
     title: '',
     description: '',
     productUrl: '',
-    imageUrl: ''
+    imageUrl: '',
+    email: false
   });
   
   const token = localStorage.getItem("adminToken");
@@ -23,7 +24,8 @@ export default function App() {
             title: formData.title,
             description: formData.description,
             productUrl: formData.productUrl,
-            imageUrl: formData.imageUrl
+            imageUrl: formData.imageUrl,
+            email: formData.email
         }
     }, {
         onSuccess: () => alert("Reklam başarıyla eklendi! 🎉"),
@@ -85,6 +87,11 @@ export default function App() {
               placeholder="https://..."
               required 
             />
+          </div>
+
+          <div className = "form-group">
+              <label>E-posta gönder</label>
+              <input type ="checkbox" checked = {formData.email} onChange={(e) => setFormData({...formData, email: e.target.checked})}></input>
           </div>
 
           <button type="submit" className="glass-button">
