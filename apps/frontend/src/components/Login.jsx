@@ -148,11 +148,17 @@ export default function Login({ onLoginSuccess }) {
     }
   };
 
-  const handleResendOtp = () => {
+   const handleResendOtp = () => {
     setErrorMsg('');
     setSuccessMsg('');
+
+    // Mevcut ekrana (view) göre backend'e doğru işlemi (operation) söylemeliyiz
+    let currentOperation = "Login";
+    if (view === "register") currentOperation = "Register";
+    else if (view === "forgot-password") currentOperation = "ResetPassword";
+
     resendOtpMutation.mutate(
-      { data: { email } },
+      { data: { email: email, operation: currentOperation } }, // Eksik olan 'operation' alanını ekledik!
       {
         onSuccess: () => {
           setSuccessMsg('Yeni doğrulama kodu e-postanıza gönderildi.');
